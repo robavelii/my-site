@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary Meta Tags -->
+    <title>Robel Fekadu | Senior Software Engineer & Systems Architect</title>
+    <meta name="title" content="Robel Fekadu | Senior Software Engineer & Systems Architect" />
+    <meta name="description" content="Senior Software Engineer specializing in distributed systems, microservices architecture, and enterprise solutions for healthcare and fintech. Expert in Node.js, Python, Go, Docker, and Kubernetes." />
+    <meta name="keywords" content="Software Engineer, Systems Architect, Distributed Systems, Microservices, Node.js, Python, Go, Docker, Kubernetes, Backend Development, DevOps, Ethiopia, Addis Ababa" />
+    <meta name="author" content="Robel Fekadu" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://robelfekadu.com/" />
+    <meta property="og:title" content="Robel Fekadu | Senior Software Engineer & Systems Architect" />
+    <meta property="og:description" content="Senior Software Engineer specializing in distributed systems, microservices architecture, and enterprise solutions for healthcare and fintech." />
+    <meta property="og:image" content="https://robelfekadu.com/og-image.jpg" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://robelfekadu.com/" />
+    <meta property="twitter:title" content="Robel Fekadu | Senior Software Engineer & Systems Architect" />
+    <meta property="twitter:description" content="Senior Software Engineer specializing in distributed systems, microservices architecture, and enterprise solutions for healthcare and fintech." />
+    <meta property="twitter:image" content="https://robelfekadu.com/og-image.jpg" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+            },
+            colors: {
+              zinc: {
+                950: '#09090b', // Deep background
+                900: '#18181b',
+                800: '#27272a',
+                // ... other shades handled by default
+              },
+            },
+            animation: {
+              'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              blink: 'blink 1s step-end infinite',
+            },
+            keyframes: {
+              blink: {
+                '0%, 100%': { opacity: '1' },
+                '50%': { opacity: '0' },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      /* Custom Scrollbar for that technical feel */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #a1a1aa; /* zinc-400 */
+        border: 1px solid transparent;
+        background-clip: content-box;
+        border-radius: 4px;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background: #27272a; /* zinc-800 */
+        border: 1px solid #09090b;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #71717a;
+      }
+      .dark ::-webkit-scrollbar-thumb:hover {
+        background: #3f3f46;
+      }
+
+      .grid-background {
+        background-image:
+          linear-gradient(to right, #e4e4e7 1px, transparent 1px),
+          linear-gradient(to bottom, #e4e4e7 1px, transparent 1px);
+        background-size: 40px 40px;
+        mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+        -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+      }
+
+      .dark .grid-background {
+        background-image:
+          linear-gradient(to right, #27272a 1px, transparent 1px),
+          linear-gradient(to bottom, #27272a 1px, transparent 1px);
+      }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+          "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+          "react/": "https://aistudiocdn.com/react@^19.2.0/",
+          "react": "https://aistudiocdn.com/react@^19.2.0"
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="/index.css" />
+  </head>
+  <body
+    class="bg-slate-50 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-200 transition-colors duration-300"
+  >
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
