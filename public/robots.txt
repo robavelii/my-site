@@ -2,4 +2,4 @@
 Allow: /
 
 # Sitemap
-Sitemap: https://robelfekadu.com/sitemap.xml
+Sitemap: https://robelfekadu.dpdns.org//sitemap.xml

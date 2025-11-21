@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { ArchitectureNode } from '../../types';
+import { ArchitectureNode } from '../types';
 
 export const ArchitectureDiagram: React.FC<{ nodes: ArchitectureNode[] }> = ({ nodes }) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
