@@ -8,7 +8,9 @@ import { TechStack } from './src/components/sections/TechStack';
 import { Contact } from './src/components/sections/Contact';
 import { useKeyboardShortcut } from './src/hooks/useKeyboardShortcut';
 import { KeyboardShortcutTooltip } from './src/components/ui/KeyboardShortcutTooltip';
+import { ParticleNetwork } from './src/components/ui/ParticleNetwork';
 import { SpeedInsights } from "@vercel/speed-insights/react"
+import { Analytics } from "@vercel/analytics/react"
 
 const AppContent: React.FC = () => {
   const { toggleTheme } = useTheme();
@@ -52,7 +54,7 @@ const AppContent: React.FC = () => {
         Skip to main content
       </a>
 
-      <div className="fixed inset-0 grid-background pointer-events-none" />
+      <ParticleNetwork />
 
       <div className="relative z-10">
         <Header />
@@ -108,6 +110,7 @@ const AppContent: React.FC = () => {
         <KeyboardShortcutTooltip show={showTooltip} onDismiss={() => setShowTooltip(false)} />
       )}
       <SpeedInsights />
+      <Analytics />
     </div>
   );
 };
