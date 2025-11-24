@@ -8,6 +8,7 @@ import { TechStack } from './src/components/sections/TechStack';
 import { Contact } from './src/components/sections/Contact';
 import { useKeyboardShortcut } from './src/hooks/useKeyboardShortcut';
 import { KeyboardShortcutTooltip } from './src/components/ui/KeyboardShortcutTooltip';
+import { SpeedInsights } from "@vercel/speed-insights/react"
 
 const AppContent: React.FC = () => {
   const { toggleTheme } = useTheme();
@@ -106,6 +107,7 @@ const AppContent: React.FC = () => {
       {isDesktop && (
         <KeyboardShortcutTooltip show={showTooltip} onDismiss={() => setShowTooltip(false)} />
       )}
+      <SpeedInsights />
     </div>
   );
 };

@@ -105,7 +105,7 @@ export const Projects: React.FC = () => {
                               <h4 className="text-xs font-mono uppercase text-zinc-500 mb-4">
                                 System Diagram
                               </h4>
-                              <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 overflow-hidden">
+                              <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 overflow-hidden bg-grid">
                                 <ArchitectureDiagram nodes={project.architecture.nodes} />
                               </div>
                             </div>
