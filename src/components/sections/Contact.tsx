@@ -70,9 +70,7 @@ export const Contact: React.FC = () => {
 
           {/* Location & Availability */}
           <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 p-6 shadow-sm dark:shadow-none">
-            <h3 className="text-sm font-mono uppercase text-zinc-500 mb-4">
-              System Info
-            </h3>
+            <h3 className="text-sm font-mono uppercase text-zinc-500 mb-4">System Info</h3>
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-sm">
                 <MapPin className="w-4 h-4 text-zinc-400" />
@@ -103,9 +101,9 @@ export const Contact: React.FC = () => {
                 Let's build something great together
               </h3>
               <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
-                I'm always interested in discussing new projects, innovative ideas, or
-                opportunities to be part of your vision. Whether you need a systems architect,
-                backend engineer, or technical consultant — let's connect.
+                I'm always interested in discussing new projects, innovative ideas, or opportunities
+                to be part of your vision. Whether you need a systems architect, backend engineer,
+                or technical consultant — let's connect.
               </p>
             </div>
 
@@ -130,7 +128,8 @@ export const Contact: React.FC = () => {
 
             <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800">
               <p className="text-xs font-mono text-zinc-500">
-                Response time: <span className="text-emerald-600 dark:text-emerald-500">~24 hours</span>
+                Response time:{' '}
+                <span className="text-emerald-600 dark:text-emerald-500">~24 hours</span>
               </p>
             </div>
           </div>

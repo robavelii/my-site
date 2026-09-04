@@ -63,7 +63,10 @@ export const Header: React.FC = () => {
           <div className="hidden md:block absolute -bottom-12 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
             <div className="bg-zinc-900 dark:bg-zinc-100 text-zinc-50 dark:text-zinc-900 px-2 py-1 rounded text-xs font-mono whitespace-nowrap">
               <kbd className="px-1 bg-zinc-800 dark:bg-zinc-200 rounded">
-                {typeof navigator !== 'undefined' && navigator.platform.toUpperCase().indexOf('MAC') >= 0 ? '⌘' : 'Ctrl'}
+                {typeof navigator !== 'undefined' &&
+                navigator.platform.toUpperCase().indexOf('MAC') >= 0
+                  ? '⌘'
+                  : 'Ctrl'}
               </kbd>
               {' + '}
               <kbd className="px-1 bg-zinc-800 dark:bg-zinc-200 rounded">K</kbd>

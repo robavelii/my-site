@@ -3,35 +3,56 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
+
     <!-- Primary Meta Tags -->
     <title>Robel Fekadu | Senior Software Engineer & Systems Architect</title>
     <meta name="title" content="Robel Fekadu | Senior Software Engineer & Systems Architect" />
-    <meta name="description" content="Senior Software Engineer specializing in distributed systems, microservices architecture, and enterprise solutions for healthcare and fintech. Expert in Node.js, Python, Go, Docker, and Kubernetes." />
-    <meta name="keywords" content="Software Engineer, Systems Architect, Distributed Systems, Microservices, Node.js, Python, Go, Docker, Kubernetes, Backend Development, DevOps, Ethiopia, Addis Ababa" />
+    <meta
+      name="description"
+      content="Senior Software Engineer specializing in distributed systems, microservices architecture, and enterprise solutions for healthcare and fintech. Expert in Node.js, Python, Go, Docker, and Kubernetes."
+    />
+    <meta
+      name="keywords"
+      content="Software Engineer, Systems Architect, Distributed Systems, Microservices, Node.js, Python, Go, Docker, Kubernetes, Backend Development, DevOps, Ethiopia, Addis Ababa"
+    />
     <meta name="author" content="Robel Fekadu" />
     <meta name="robots" content="index, follow" />
-    
+
+    <!-- Canonical: robelfekadu.com is the one indexable host -->
+    <link rel="canonical" href="https://robelfekadu.com/" />
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://robelfekadu.com/" />
-    <meta property="og:title" content="Robel Fekadu | Senior Software Engineer & Systems Architect" />
-    <meta property="og:description" content="Senior Software Engineer specializing in distributed systems, microservices architecture, and enterprise solutions for healthcare and fintech." />
+    <meta
+      property="og:title"
+      content="Robel Fekadu | Senior Software Engineer & Systems Architect"
+    />
+    <meta
+      property="og:description"
+      content="Senior Software Engineer specializing in distributed systems, microservices architecture, and enterprise solutions for healthcare and fintech."
+    />
     <meta property="og:image" content="https://robelfekadu.com/robel-fekadu.jpg" />
     <meta property="og:site_name" content="Robel Fekadu Portfolio" />
     <meta property="og:locale" content="en_US" />
-    
+
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content="https://robelfekadu.com/" />
-    <meta property="twitter:title" content="Robel Fekadu | Senior Software Engineer & Systems Architect" />
-    <meta property="twitter:description" content="Senior Software Engineer specializing in distributed systems, microservices architecture, and enterprise solutions for healthcare and fintech." />
+    <meta
+      property="twitter:title"
+      content="Robel Fekadu | Senior Software Engineer & Systems Architect"
+    />
+    <meta
+      property="twitter:description"
+      content="Senior Software Engineer specializing in distributed systems, microservices architecture, and enterprise solutions for healthcare and fintech."
+    />
     <meta property="twitter:image" content="https://robelfekadu.com/robel-fekadu.jpg" />
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" href="/favicon.ico" />
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -40,16 +61,18 @@
     />
 
     <link rel="stylesheet" href="/index.css" />
-    
+
     <!-- Prevent flash of unstyled content by applying theme before React loads -->
     <script>
-      (function() {
+      (function () {
         const storageKey = 'vite-ui-theme';
         const theme = localStorage.getItem(storageKey) || 'system';
         const root = document.documentElement;
-        
+
         if (theme === 'system') {
-          const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+            ? 'dark'
+            : 'light';
           root.classList.add(systemTheme);
         } else {
           root.classList.add(theme);
