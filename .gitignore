@@ -24,3 +24,9 @@ dist-ssr
 *.sw?
 
 .vercel
+
+# Credentials — never commit
+cloudflare-token.txt
+*token*.txt
+*.token
+.env*.local

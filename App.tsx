@@ -9,6 +9,7 @@ import { Contact } from './src/components/sections/Contact';
 import { useKeyboardShortcut } from './src/hooks/useKeyboardShortcut';
 import { KeyboardShortcutTooltip } from './src/components/ui/KeyboardShortcutTooltip';
 import { ParticleNetwork } from './src/components/ui/ParticleNetwork';
+import { CONTACT_EMAIL } from './src/data/constants';
 import { SpeedInsights } from "@vercel/speed-insights/react"
 import { Analytics } from "@vercel/analytics/react"
 
@@ -94,7 +95,7 @@ const AppContent: React.FC = () => {
                   LinkedIn
                 </a>
                 <a
-                  href="mailto:robelfekadu@example.com"
+                  href={`mailto:${CONTACT_EMAIL}`}
                   className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
                 >
                   Email

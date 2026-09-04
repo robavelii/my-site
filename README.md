@@ -49,7 +49,15 @@ npm run preview
 
 ## 🚢 Deployment
 
-This project is configured for deployment on Vercel. See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions.
+Vercel builds and serves the site as the origin. Cloudflare sits in front of it and
+owns DNS, caching, and response headers.
+
+**Caching and headers are configured in Cloudflare, not in `vercel.json`.** That is
+deliberate: Cloudflare's zone settings override origin headers, so keeping a `headers`
+block in `vercel.json` as well would create two sources of truth where only one wins.
+The Cloudflare side lives in [`infra/cloudflare-config.sh`](./infra/cloudflare-config.sh) —
+run it with no arguments for a dry run that prints the current state and the proposed
+changes, or `--apply` to commit them (it backs up the existing config first).
 
 ### Quick Deploy
 
@@ -143,7 +151,7 @@ This is a personal portfolio, but suggestions and improvements are welcome via i
 
 ## 📧 Contact
 
-- **Email:** robelfekadu@gmail.com
+- **Email:** contact@robelfekadu.com
 - **LinkedIn:** [robavelii](https://www.linkedin.com/in/robavelii)
 - **GitHub:** [robavelii](https://github.com/robavelii)
 
