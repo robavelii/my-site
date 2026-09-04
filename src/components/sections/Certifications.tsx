@@ -43,20 +43,14 @@ export const Certifications: React.FC = () => {
                 <Award className="w-6 h-6" />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-1">
-                  {cert.name}
-                </h3>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-2">
-                  {cert.issuer}
-                </p>
+                <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 mb-1">{cert.name}</h3>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-2">{cert.issuer}</p>
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge className="bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700 text-xs">
                     {cert.date}
                   </Badge>
                   {cert.credentialId && (
-                    <span className="text-xs font-mono text-zinc-500">
-                      ID: {cert.credentialId}
-                    </span>
+                    <span className="text-xs font-mono text-zinc-500">ID: {cert.credentialId}</span>
                   )}
                 </div>
               </div>

@@ -16,7 +16,7 @@ export const Hero: React.FC = () => {
         <div className="relative w-24 h-24 md:w-32 md:h-32 group">
           {/* Pink glow effect on hover */}
           <div className="absolute -inset-1 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full opacity-0 blur transition duration-500 group-hover:opacity-75"></div>
-          
+
           {/* Image container */}
           <div className="relative w-full h-full rounded-full bg-zinc-200 dark:bg-zinc-800 border-2 border-zinc-100 dark:border-zinc-700 overflow-hidden">
             <img

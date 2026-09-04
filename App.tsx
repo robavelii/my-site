@@ -10,8 +10,8 @@ import { useKeyboardShortcut } from './src/hooks/useKeyboardShortcut';
 import { KeyboardShortcutTooltip } from './src/components/ui/KeyboardShortcutTooltip';
 import { ParticleNetwork } from './src/components/ui/ParticleNetwork';
 import { CONTACT_EMAIL } from './src/data/constants';
-import { SpeedInsights } from "@vercel/speed-insights/react"
-import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from '@vercel/speed-insights/react';
+import { Analytics } from '@vercel/analytics/react';
 
 const AppContent: React.FC = () => {
   const { toggleTheme } = useTheme();
@@ -60,7 +60,10 @@ const AppContent: React.FC = () => {
       <div className="relative z-10">
         <Header />
 
-        <main id="main-content" className="container mx-auto px-4 pt-24 pb-12 space-y-24 md:space-y-32">
+        <main
+          id="main-content"
+          className="container mx-auto px-4 pt-24 pb-12 space-y-24 md:space-y-32"
+        >
           <Hero />
 
           <div className="w-full h-px bg-zinc-200 dark:bg-zinc-800 transition-colors" />
@@ -81,14 +84,14 @@ const AppContent: React.FC = () => {
               <div className="flex items-center gap-6">
                 <a
                   href="https://github.com/robavelii"
-                  target='_blank'
+                  target="_blank"
                   className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
                 >
                   GitHub
                 </a>
                 <a
                   href="https://www.linkedin.com/in/robavelii"
-                  target='_blank'
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors"
                 >

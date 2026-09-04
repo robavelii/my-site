@@ -177,8 +177,7 @@ export const PROJECTS: Project[] = [
     role: 'Systems Engineer',
     stack: ['Go', 'Redis', 'gRPC'],
     latency: '<3ms',
-    description:
-      'High-performance distributed rate limiting service using token bucket algorithm.',
+    description: 'High-performance distributed rate limiting service using token bucket algorithm.',
     architecture: {
       nodes: [
         { name: 'gRPC API', details: 'Rate Check Endpoint', type: 'gateway' },

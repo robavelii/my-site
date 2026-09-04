@@ -26,9 +26,8 @@ export const useKeyboardShortcut = ({
       const altMatch = altKey ? event.altKey : !event.altKey;
 
       // For Ctrl/Cmd + K, we want either Ctrl (Windows/Linux) or Cmd (Mac)
-      const modifierMatch = (ctrlKey || metaKey) 
-        ? (event.ctrlKey || event.metaKey) 
-        : ctrlMatch && metaMatch;
+      const modifierMatch =
+        ctrlKey || metaKey ? event.ctrlKey || event.metaKey : ctrlMatch && metaMatch;
 
       if (
         event.key.toLowerCase() === key.toLowerCase() &&
