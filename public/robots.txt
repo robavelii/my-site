@@ -1,5 +1,4 @@
-# User-agent: *
+User-agent: *
 Allow: /
 
-# Sitemap
-Sitemap: https://robelfekadu.dpdns.org//sitemap.xml
+Sitemap: https://robelfekadu.com/sitemap.xml
