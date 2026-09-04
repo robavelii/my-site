@@ -1,109 +1,154 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Monitor, Sun, Moon, Laptop } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Laptop, Moon, Search, Sun } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+import { SECTIONS } from '../../data/constants';
 
-export const Header: React.FC = () => {
+const THEME_OPTIONS = [
+  { value: 'light', label: 'Light', icon: Sun },
+  { value: 'dark', label: 'Dark', icon: Moon },
+  { value: 'system', label: 'System', icon: Laptop },
+] as const;
+
+interface HeaderProps {
+  onOpenPalette: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ onOpenPalette }) => {
   const { theme, setTheme } = useTheme();
-  const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
-  const themeMenuRef = useRef<HTMLDivElement>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>('');
+  const menuRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  // userAgentData is the non-deprecated replacement for navigator.platform.
+  const [isMac] = useState(() => {
+    const ua = navigator as Navigator & { userAgentData?: { platform?: string } };
+    return /mac/i.test(ua.userAgentData?.platform ?? navigator.userAgent);
+  });
 
-  // Click outside to close theme menu
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (themeMenuRef.current && !themeMenuRef.current.contains(event.target as Node)) {
-        setIsThemeMenuOpen(false);
+    if (!menuOpen) return;
+    const onPointerDown = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) setMenuOpen(false);
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setMenuOpen(false);
+        triggerRef.current?.focus();
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('mousedown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [menuOpen]);
+
+  // Scroll-spy: highlight whichever section currently owns the viewport.
+  useEffect(() => {
+    // Degrade to no highlight rather than throwing during mount, which would
+    // take the whole tree down with it.
+    if (typeof IntersectionObserver === 'undefined') return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible) setActiveSection(visible.target.id);
+      },
+      { rootMargin: '-20% 0px -60% 0px', threshold: [0.1, 0.5] }
+    );
+    SECTIONS.forEach(({ id }) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
   }, []);
 
   return (
-    <nav className="fixed top-0 w-full z-50 border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md h-14 flex items-center justify-between px-4 md:px-6 lg:px-8 transition-colors">
-      {/* Breadcrumbs */}
-      <div className="flex items-center gap-2 text-xs md:text-sm font-mono text-zinc-500">
-        <span className="text-zinc-400 dark:text-zinc-500">sys</span>
-        <span className="text-zinc-300 dark:text-zinc-700">/</span>
-        <span className="hover:text-zinc-900 dark:hover:text-zinc-300 cursor-pointer transition-colors">
-          portfolio
-        </span>
-        <span className="text-zinc-300 dark:text-zinc-700">/</span>
-        <span className="text-emerald-600 dark:text-emerald-500 font-medium">main</span>
-      </div>
+    <nav
+      aria-label="Main"
+      className="fixed top-0 w-full z-50 border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md h-14 flex items-center justify-between gap-4 px-4 md:px-6 lg:px-8 transition-colors"
+    >
+      <a
+        href="#main-content"
+        className="font-mono text-sm font-medium text-zinc-900 dark:text-zinc-100 shrink-0"
+      >
+        robel<span className="text-emerald-700 dark:text-emerald-400">.</span>
+      </a>
 
-      {/* Status & Controls */}
-      <div className="flex items-center gap-4 md:gap-6">
-        <div className="flex items-center gap-2 bg-zinc-100 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 px-3 py-1 rounded-full transition-colors">
-          <div className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-          </div>
-          <span className="text-[10px] font-mono uppercase tracking-widest text-emerald-600 dark:text-emerald-500 font-medium">
-            System Online
-          </span>
-        </div>
+      <ul className="hidden md:flex items-center gap-1 text-sm">
+        {SECTIONS.map(({ id, label }) => (
+          <li key={id}>
+            <a
+              href={`#${id}`}
+              aria-current={activeSection === id ? 'true' : undefined}
+              className={`block rounded px-3 py-1.5 font-mono text-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
+                activeSection === id
+                  ? 'text-zinc-900 dark:text-zinc-100 bg-zinc-100 dark:bg-zinc-800'
+                  : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'
+              }`}
+            >
+              {label}
+            </a>
+          </li>
+        ))}
+      </ul>
 
-        <div className="hidden md:flex items-center gap-4 text-xs font-mono text-zinc-400 dark:text-zinc-500">
-          <span>v2.4.0</span>
-          <Monitor className="w-4 h-4" />
-        </div>
+      <div className="flex items-center gap-2 shrink-0">
+        <button
+          type="button"
+          onClick={onOpenPalette}
+          className="flex items-center gap-2 rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-2.5 h-9 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+        >
+          <Search className="h-4 w-4" aria-hidden="true" />
+          <span className="sr-only">Open command palette</span>
+          <kbd className="hidden sm:block font-mono text-[10px] tracking-wide" aria-hidden="true">
+            {isMac ? '⌘' : 'Ctrl'} K
+          </kbd>
+        </button>
 
-        {/* Theme Toggle with Keyboard Shortcut Hint */}
-        <div className="relative group" ref={themeMenuRef}>
+        <div className="relative" ref={menuRef}>
           <button
-            onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)}
-            className="flex items-center justify-center w-9 h-9 rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100 transition-all focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:focus:ring-zinc-600"
-            aria-label="Toggle theme"
+            ref={triggerRef}
+            type="button"
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-haspopup="menu"
+            aria-expanded={menuOpen}
+            aria-label="Change theme"
+            className="flex items-center justify-center w-9 h-9 rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
           >
-            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            <Sun className="h-[1.2rem] w-[1.2rem] dark:hidden" aria-hidden="true" />
+            <Moon className="hidden h-[1.2rem] w-[1.2rem] dark:block" aria-hidden="true" />
           </button>
 
-          {/* Keyboard Shortcut Hint - Desktop Only */}
-          <div className="hidden md:block absolute -bottom-12 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-            <div className="bg-zinc-900 dark:bg-zinc-100 text-zinc-50 dark:text-zinc-900 px-2 py-1 rounded text-xs font-mono whitespace-nowrap">
-              <kbd className="px-1 bg-zinc-800 dark:bg-zinc-200 rounded">
-                {typeof navigator !== 'undefined' &&
-                navigator.platform.toUpperCase().indexOf('MAC') >= 0
-                  ? '⌘'
-                  : 'Ctrl'}
-              </kbd>
-              {' + '}
-              <kbd className="px-1 bg-zinc-800 dark:bg-zinc-200 rounded">K</kbd>
-            </div>
-          </div>
-
-          {isThemeMenuOpen && (
-            <div className="absolute right-0 mt-2 w-36 origin-top-right rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 animate-in fade-in zoom-in-95 duration-100">
-              <div className="py-1">
+          {menuOpen && (
+            <div
+              role="menu"
+              aria-label="Theme"
+              className="absolute right-0 mt-2 w-36 origin-top-right overflow-hidden rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-lg z-50 animate-in fade-in zoom-in-95 duration-100"
+            >
+              {THEME_OPTIONS.map(({ value, label, icon: Icon }) => (
                 <button
+                  key={value}
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={theme === value}
                   onClick={() => {
-                    setTheme('light');
-                    setIsThemeMenuOpen(false);
+                    setTheme(value);
+                    setMenuOpen(false);
+                    triggerRef.current?.focus();
                   }}
-                  className={`flex w-full items-center px-4 py-2 text-sm ${theme === 'light' ? 'text-zinc-900 dark:text-zinc-100 bg-zinc-100 dark:bg-zinc-900' : 'text-zinc-700 dark:text-zinc-400'} hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors`}
+                  className={`flex w-full items-center px-4 py-2 text-sm transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800 focus:outline-none focus-visible:bg-zinc-100 dark:focus-visible:bg-zinc-800 ${
+                    theme === value
+                      ? 'text-zinc-900 dark:text-zinc-100 bg-zinc-100 dark:bg-zinc-900'
+                      : 'text-zinc-700 dark:text-zinc-300'
+                  }`}
                 >
-                  <Sun className="mr-2 h-4 w-4" /> Light
+                  <Icon className="mr-2 h-4 w-4" aria-hidden="true" /> {label}
                 </button>
-                <button
-                  onClick={() => {
-                    setTheme('dark');
-                    setIsThemeMenuOpen(false);
-                  }}
-                  className={`flex w-full items-center px-4 py-2 text-sm ${theme === 'dark' ? 'text-zinc-900 dark:text-zinc-100 bg-zinc-100 dark:bg-zinc-900' : 'text-zinc-700 dark:text-zinc-400'} hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors`}
-                >
-                  <Moon className="mr-2 h-4 w-4" /> Dark
-                </button>
-                <button
-                  onClick={() => {
-                    setTheme('system');
-                    setIsThemeMenuOpen(false);
-                  }}
-                  className={`flex w-full items-center px-4 py-2 text-sm ${theme === 'system' ? 'text-zinc-900 dark:text-zinc-100 bg-zinc-100 dark:bg-zinc-900' : 'text-zinc-700 dark:text-zinc-400'} hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors`}
-                >
-                  <Laptop className="mr-2 h-4 w-4" /> System
-                </button>
-              </div>
+              ))}
             </div>
           )}
         </div>

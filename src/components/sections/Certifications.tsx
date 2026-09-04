@@ -39,7 +39,7 @@ export const Certifications: React.FC = () => {
             className="border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 p-6 shadow-sm dark:shadow-none hover:shadow-md dark:hover:border-zinc-700 transition-all"
           >
             <div className="flex items-start gap-4">
-              <div className="p-3 rounded-lg bg-emerald-100 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400">
+              <div className="p-3 rounded-lg bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400">
                 <Award className="w-6 h-6" />
               </div>
               <div className="flex-1">
@@ -50,7 +50,9 @@ export const Certifications: React.FC = () => {
                     {cert.date}
                   </Badge>
                   {cert.credentialId && (
-                    <span className="text-xs font-mono text-zinc-500">ID: {cert.credentialId}</span>
+                    <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400">
+                      ID: {cert.credentialId}
+                    </span>
                   )}
                 </div>
               </div>

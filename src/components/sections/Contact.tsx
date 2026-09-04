@@ -12,7 +12,7 @@ export const Contact: React.FC = () => {
         {/* Contact Information */}
         <div className="space-y-6">
           <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 p-6 shadow-sm dark:shadow-none">
-            <h3 className="text-sm font-mono uppercase text-zinc-500 mb-4 flex items-center gap-2">
+            <h3 className="text-sm font-mono uppercase text-zinc-500 dark:text-zinc-400 mb-4 flex items-center gap-2">
               <Mail className="w-4 h-4" />
               Direct Channels
             </h3>
@@ -25,7 +25,9 @@ export const Contact: React.FC = () => {
                   <Mail className="w-4 h-4" />
                 </div>
                 <div className="flex-1">
-                  <div className="text-xs font-mono text-zinc-500 uppercase">Email</div>
+                  <div className="text-xs font-mono text-zinc-500 dark:text-zinc-400 uppercase">
+                    Email
+                  </div>
                   <div className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
                     {CONTACT_EMAIL}
                   </div>
@@ -42,7 +44,9 @@ export const Contact: React.FC = () => {
                   <Linkedin className="w-4 h-4" />
                 </div>
                 <div className="flex-1">
-                  <div className="text-xs font-mono text-zinc-500 uppercase">LinkedIn</div>
+                  <div className="text-xs font-mono text-zinc-500 dark:text-zinc-400 uppercase">
+                    LinkedIn
+                  </div>
                   <div className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
                     /in/robavelii
                   </div>
@@ -59,7 +63,9 @@ export const Contact: React.FC = () => {
                   <Github className="w-4 h-4" />
                 </div>
                 <div className="flex-1">
-                  <div className="text-xs font-mono text-zinc-500 uppercase">GitHub</div>
+                  <div className="text-xs font-mono text-zinc-500 dark:text-zinc-400 uppercase">
+                    GitHub
+                  </div>
                   <div className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
                     @robavelii
                   </div>
@@ -70,14 +76,16 @@ export const Contact: React.FC = () => {
 
           {/* Location & Availability */}
           <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 p-6 shadow-sm dark:shadow-none">
-            <h3 className="text-sm font-mono uppercase text-zinc-500 mb-4">System Info</h3>
+            <h3 className="text-sm font-mono uppercase text-zinc-500 dark:text-zinc-400 mb-4">
+              System Info
+            </h3>
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-sm">
-                <MapPin className="w-4 h-4 text-zinc-400" />
+                <MapPin className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
                 <span className="text-zinc-600 dark:text-zinc-400">Addis Ababa, Ethiopia</span>
               </div>
               <div className="flex items-center gap-3 text-sm">
-                <Clock className="w-4 h-4 text-zinc-400" />
+                <Clock className="w-4 h-4 text-zinc-500 dark:text-zinc-400" />
                 <span className="text-zinc-600 dark:text-zinc-400">EAT (UTC+3)</span>
               </div>
               <div className="flex items-center gap-3 text-sm">
@@ -85,7 +93,7 @@ export const Contact: React.FC = () => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
                 </div>
-                <span className="text-emerald-600 dark:text-emerald-500 font-medium">
+                <span className="text-emerald-700 dark:text-emerald-400 font-medium">
                   Available for opportunities
                 </span>
               </div>
@@ -127,9 +135,9 @@ export const Contact: React.FC = () => {
             </div>
 
             <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800">
-              <p className="text-xs font-mono text-zinc-500">
+              <p className="text-xs font-mono text-zinc-500 dark:text-zinc-400">
                 Response time:{' '}
-                <span className="text-emerald-600 dark:text-emerald-500">~24 hours</span>
+                <span className="text-emerald-700 dark:text-emerald-400">~24 hours</span>
               </p>
             </div>
           </div>

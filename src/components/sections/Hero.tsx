@@ -29,7 +29,7 @@ export const Hero: React.FC = () => {
 
         <h1 className="text-4xl md:text-6xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 transition-colors">
           Building scalable <br />
-          <span className="text-zinc-500">distributed systems.</span>
+          <span className="text-zinc-500 dark:text-zinc-400">distributed systems.</span>
         </h1>
 
         <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-md transition-colors">
@@ -61,7 +61,7 @@ export const Hero: React.FC = () => {
             <span className="ml-2 text-sm">Download Resume</span>
           </a>
 
-          <div className="flex items-center gap-4 px-4 h-12 text-sm text-zinc-500 font-mono">
+          <div className="flex items-center gap-4 px-4 h-12 text-sm text-zinc-500 dark:text-zinc-400 font-mono">
             <span>Latency: 12ms</span>
             <span className="w-px h-4 bg-zinc-300 dark:bg-zinc-800"></span>
             <span>Region: et-east-1</span>

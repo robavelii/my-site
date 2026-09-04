@@ -1,49 +1,59 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 interface KeyboardShortcutOptions {
   key: string;
-  ctrlKey?: boolean;
-  metaKey?: boolean;
+  /** Match Ctrl on Windows/Linux or Cmd on macOS. */
+  modifier?: boolean;
   shiftKey?: boolean;
   altKey?: boolean;
-  callback: () => void;
+  callback: (event: KeyboardEvent) => void;
+  enabled?: boolean;
 }
+
+/** True while focus is somewhere that should keep its own key handling. */
+const isTypingTarget = (target: EventTarget | null): boolean => {
+  if (!(target instanceof HTMLElement)) return false;
+  return (
+    target.isContentEditable ||
+    ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) ||
+    target.getAttribute('role') === 'textbox'
+  );
+};
 
 export const useKeyboardShortcut = ({
   key,
-  ctrlKey = false,
-  metaKey = false,
+  modifier = false,
   shiftKey = false,
   altKey = false,
   callback,
+  enabled = true,
 }: KeyboardShortcutOptions) => {
+  // Held in a ref so an inline arrow from the caller doesn't tear down and
+  // re-attach the listener on every single render.
+  const callbackRef = useRef(callback);
   useEffect(() => {
+    callbackRef.current = callback;
+  }, [callback]);
+
+  useEffect(() => {
+    if (!enabled) return;
+
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Check if all modifier keys match
-      const ctrlMatch = ctrlKey ? event.ctrlKey : !event.ctrlKey;
-      const metaMatch = metaKey ? event.metaKey : !event.metaKey;
-      const shiftMatch = shiftKey ? event.shiftKey : !event.shiftKey;
-      const altMatch = altKey ? event.altKey : !event.altKey;
+      if (event.key.toLowerCase() !== key.toLowerCase()) return;
+      if (event.repeat) return;
 
-      // For Ctrl/Cmd + K, we want either Ctrl (Windows/Linux) or Cmd (Mac)
-      const modifierMatch =
-        ctrlKey || metaKey ? event.ctrlKey || event.metaKey : ctrlMatch && metaMatch;
+      // Ctrl on Windows/Linux, Cmd on macOS - accept either, reject neither.
+      const modifierHeld = event.ctrlKey || event.metaKey;
+      if (modifier !== modifierHeld) return;
+      if (event.shiftKey !== shiftKey) return;
+      if (event.altKey !== altKey) return;
+      if (!modifier && isTypingTarget(event.target)) return;
 
-      if (
-        event.key.toLowerCase() === key.toLowerCase() &&
-        modifierMatch &&
-        shiftMatch &&
-        altMatch
-      ) {
-        event.preventDefault();
-        callback();
-      }
+      event.preventDefault();
+      callbackRef.current(event);
     };
 
     window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [key, ctrlKey, metaKey, shiftKey, altKey, callback]);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [key, modifier, shiftKey, altKey, enabled]);
 };

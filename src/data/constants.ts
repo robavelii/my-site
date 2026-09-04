@@ -29,6 +29,19 @@ export const SKILLS_DATA = {
   focus: 'Distributed Systems',
 };
 
+// Shared by the header nav and the command palette so the two can never drift.
+export const SECTIONS = [
+  { id: 'services', label: 'Services' },
+  { id: 'stack', label: 'Stack' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'contact', label: 'Contact' },
+] as const;
+
+export const SOCIAL = {
+  github: 'https://github.com/robavelii',
+  linkedin: 'https://www.linkedin.com/in/robavelii',
+} as const;
+
 // Cloudflare Email Routing forwards this to the personal inbox.
 export const CONTACT_EMAIL = 'contact@robelfekadu.com';
 
@@ -392,7 +405,7 @@ export const getTechConfig = (techName: string) => {
   return (
     config[techName] || {
       icon: Box,
-      color: 'text-zinc-500',
+      color: 'text-zinc-500 dark:text-zinc-400',
       bg: 'bg-zinc-100 dark:bg-zinc-800',
       border: 'hover:border-zinc-300',
     }

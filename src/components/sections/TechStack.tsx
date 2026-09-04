@@ -5,12 +5,12 @@ import { SectionHeader } from '../ui/SectionHeader';
 
 export const TechStack: React.FC = () => {
   return (
-    <section>
+    <section id="stack">
       <SectionHeader title="Infrastructure & Stack" icon={Layers} />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
         {TECH_STACK.map((cat, idx) => (
           <div key={idx} className="space-y-3">
-            <h3 className="text-xs font-mono uppercase text-zinc-500 pl-1 flex items-center gap-2">
+            <h3 className="text-xs font-mono uppercase text-zinc-500 dark:text-zinc-400 pl-1 flex items-center gap-2">
               {cat.name === 'Compute' && <Cpu className="w-3 h-3" />}
               {cat.name === 'Data' && <Database className="w-3 h-3" />}
               {cat.name === 'Infra' && <Server className="w-3 h-3" />}
