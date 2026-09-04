@@ -8,6 +8,8 @@
 #
 # Usage:
 #   export CLOUDFLARE_API_TOKEN=...        # you set this; the script only reads it
+#   ...or store it once at ~/.config/cloudflare/robelfekadu.env (chmod 600) and
+#      the script will source it automatically. Never keep it inside the repo.
 #   ./infra/cloudflare-config.sh           # dry run — prints the plan, changes nothing
 #   ./infra/cloudflare-config.sh --apply   # backs up current config, then applies
 #
@@ -35,7 +37,13 @@ for arg in "$@"; do
   esac
 done
 
-: "${CLOUDFLARE_API_TOKEN:?set CLOUDFLARE_API_TOKEN first (see header)}"
+# Token may come from the environment, or from a local file outside the repo.
+TOKEN_FILE="${CLOUDFLARE_TOKEN_FILE:-$HOME/.config/cloudflare/robelfekadu.env}"
+if [[ -z "${CLOUDFLARE_API_TOKEN:-}" && -r "$TOKEN_FILE" ]]; then
+  # shellcheck disable=SC1090
+  source "$TOKEN_FILE"
+fi
+: "${CLOUDFLARE_API_TOKEN:?no token. export CLOUDFLARE_API_TOKEN, or write it to $TOKEN_FILE}"
 command -v jq >/dev/null || { echo "jq is required" >&2; exit 1; }
 
 cf() {  # cf <METHOD> <PATH> [JSON_BODY]

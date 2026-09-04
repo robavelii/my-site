@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Command } from 'lucide-react';
 
 interface KeyboardShortcutTooltipProps {
@@ -10,22 +10,18 @@ export const KeyboardShortcutTooltip: React.FC<KeyboardShortcutTooltipProps> = (
   show,
   onDismiss,
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const isMac = typeof navigator !== 'undefined' && navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+  const isMac =
+    typeof navigator !== 'undefined' && navigator.platform.toUpperCase().indexOf('MAC') >= 0;
 
+  // Auto-dismiss after 3s. `show` is owned by the parent, so there is no local
+  // mirror of it to keep in sync.
   useEffect(() => {
-    if (show) {
-      setIsVisible(true);
-      const timer = setTimeout(() => {
-        setIsVisible(false);
-        onDismiss();
-      }, 3000); // Auto-dismiss after 3 seconds
-
-      return () => clearTimeout(timer);
-    }
+    if (!show) return;
+    const timer = setTimeout(onDismiss, 3000);
+    return () => clearTimeout(timer);
   }, [show, onDismiss]);
 
-  if (!isVisible) return null;
+  if (!show) return null;
 
   return (
     <div className="fixed bottom-6 right-6 z-50 animate-in fade-in slide-in-from-bottom-2 duration-300">
@@ -34,14 +30,19 @@ export const KeyboardShortcutTooltip: React.FC<KeyboardShortcutTooltipProps> = (
         <div className="flex-1">
           <p className="text-sm font-medium">Theme toggled!</p>
           <p className="text-xs opacity-80 mt-0.5">
-            Press <kbd className="px-1.5 py-0.5 bg-zinc-800 dark:bg-zinc-200 rounded text-xs font-mono">{isMac ? '⌘' : 'Ctrl'}</kbd> + <kbd className="px-1.5 py-0.5 bg-zinc-800 dark:bg-zinc-200 rounded text-xs font-mono">K</kbd> to toggle
+            Press{' '}
+            <kbd className="px-1.5 py-0.5 bg-zinc-800 dark:bg-zinc-200 rounded text-xs font-mono">
+              {isMac ? '⌘' : 'Ctrl'}
+            </kbd>{' '}
+            +{' '}
+            <kbd className="px-1.5 py-0.5 bg-zinc-800 dark:bg-zinc-200 rounded text-xs font-mono">
+              K
+            </kbd>{' '}
+            to toggle
           </p>
         </div>
         <button
-          onClick={() => {
-            setIsVisible(false);
-            onDismiss();
-          }}
+          onClick={onDismiss}
           className="text-zinc-400 dark:text-zinc-600 hover:text-zinc-200 dark:hover:text-zinc-800 transition-colors"
           aria-label="Dismiss"
         >
