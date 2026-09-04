@@ -29,6 +29,9 @@ export const SKILLS_DATA = {
   focus: 'Distributed Systems',
 };
 
+// Cloudflare Email Routing forwards this to the personal inbox.
+export const CONTACT_EMAIL = 'contact@robelfekadu.com';
+
 export const PROJECTS: Project[] = [
   {
     id: 'p1',

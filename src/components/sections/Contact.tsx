@@ -1,6 +1,7 @@
 import React from 'react';
 import { Mail, Linkedin, Github, MapPin, Clock } from 'lucide-react';
 import { SectionHeader } from '../ui/SectionHeader';
+import { CONTACT_EMAIL } from '../../data/constants';
 
 export const Contact: React.FC = () => {
   return (
@@ -17,7 +18,7 @@ export const Contact: React.FC = () => {
             </h3>
             <div className="space-y-4">
               <a
-                href="mailto:robelfekadu@example.com"
+                href={`mailto:${CONTACT_EMAIL}`}
                 className="flex items-center gap-3 p-3 rounded border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors group"
               >
                 <div className="p-2 rounded bg-blue-100 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">
@@ -26,7 +27,7 @@ export const Contact: React.FC = () => {
                 <div className="flex-1">
                   <div className="text-xs font-mono text-zinc-500 uppercase">Email</div>
                   <div className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                    robelfekadu@example.com
+                    {CONTACT_EMAIL}
                   </div>
                 </div>
               </a>
@@ -110,7 +111,7 @@ export const Contact: React.FC = () => {
 
             <div className="flex flex-col sm:flex-row gap-3">
               <a
-                href="mailto:robelfekadu@example.com"
+                href={`mailto:${CONTACT_EMAIL}`}
                 className="inline-flex h-11 items-center justify-center rounded-md bg-zinc-900 dark:bg-zinc-100 px-6 font-medium text-zinc-50 dark:text-zinc-900 transition-all hover:bg-zinc-800 dark:hover:bg-zinc-200 focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:focus:ring-zinc-400 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-zinc-900"
               >
                 <Mail className="w-4 h-4 mr-2" />
