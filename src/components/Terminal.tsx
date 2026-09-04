@@ -30,7 +30,7 @@ export const Terminal: React.FC<TerminalProps> = ({ data }) => {
           <div className="w-3 h-3 rounded-full bg-yellow-500" />
           <div className="w-3 h-3 rounded-full bg-green-500" />
         </div>
-        <div className="text-xs font-mono text-zinc-500">config.json — ro@sys:~/</div>
+        <div className="text-xs font-mono text-zinc-400">config.json — ro@sys:~/</div>
       </div>
 
       {/* Terminal Body */}

@@ -43,8 +43,10 @@ export const ArchitectureDiagram: React.FC<{ nodes: ArchitectureNode[] }> = ({ n
   return (
     <div
       ref={scrollContainerRef}
-      className="w-full relative overflow-x-auto pb-4 cursor-grab active:cursor-grabbing select-none [&::-webkit-scrollbar]:hidden"
-      style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      className="w-full relative overflow-x-auto pb-2 cursor-grab active:cursor-grabbing select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+      tabIndex={0}
+      role="group"
+      aria-label={`Architecture diagram, ${nodes.length} nodes, scrolls horizontally`}
       onMouseDown={handleMouseDown}
       onMouseLeave={handleMouseLeave}
       onMouseUp={handleMouseUp}

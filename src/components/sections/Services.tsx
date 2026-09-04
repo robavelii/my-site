@@ -14,7 +14,7 @@ export const Services: React.FC = () => {
         {/* Sidebar (Endpoint List) */}
         <div className="lg:col-span-4 border-b lg:border-b-0 lg:border-r border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/30">
           <div className="p-4 border-b border-zinc-200 dark:border-zinc-800">
-            <h3 className="text-xs font-mono uppercase text-zinc-500 font-medium">
+            <h3 className="text-xs font-mono uppercase text-zinc-500 dark:text-zinc-400 font-medium">
               Available Endpoints
             </h3>
           </div>
@@ -37,7 +37,7 @@ export const Services: React.FC = () => {
                   {service.method}
                 </span>
                 <span
-                  className={`text-xs font-mono truncate ${activeService === service.endpoint ? 'text-zinc-900 dark:text-zinc-100 font-medium' : 'text-zinc-500 dark:text-zinc-500'}`}
+                  className={`text-xs font-mono truncate ${activeService === service.endpoint ? 'text-zinc-900 dark:text-zinc-100 font-medium' : 'text-zinc-500 dark:text-zinc-400'}`}
                 >
                   {service.endpoint}
                 </span>
@@ -74,7 +74,7 @@ export const Services: React.FC = () => {
                 <div className="p-6 flex-1 space-y-8">
                   {/* System Flow Visualization */}
                   <div>
-                    <h4 className="text-xs font-mono uppercase text-zinc-500 mb-4 flex items-center gap-2">
+                    <h4 className="text-xs font-mono uppercase text-zinc-500 dark:text-zinc-400 mb-4 flex items-center gap-2">
                       <Workflow className="w-3 h-3" /> System Flow
                     </h4>
                     <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
@@ -84,7 +84,7 @@ export const Services: React.FC = () => {
                             {step}
                           </div>
                           {i < service.flow.length - 1 && (
-                            <ArrowRight className="w-3 h-3 text-zinc-400" />
+                            <ArrowRight className="w-3 h-3 text-zinc-500 dark:text-zinc-400" />
                           )}
                         </React.Fragment>
                       ))}
@@ -94,7 +94,7 @@ export const Services: React.FC = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Request Parameters */}
                     <div>
-                      <h4 className="text-xs font-mono uppercase text-zinc-500 mb-3 flex items-center gap-2">
+                      <h4 className="text-xs font-mono uppercase text-zinc-500 dark:text-zinc-400 mb-3 flex items-center gap-2">
                         <Box className="w-3 h-3" /> Request Body Schema
                       </h4>
                       <div className="bg-zinc-50 dark:bg-zinc-900/50 rounded border border-zinc-200 dark:border-zinc-800 p-3">
@@ -102,7 +102,7 @@ export const Services: React.FC = () => {
                           {service.params?.map((param, i) => (
                             <div key={i} className="flex justify-between text-xs font-mono">
                               <span className="text-blue-600 dark:text-blue-400">{param}</span>
-                              <span className="text-zinc-400">string</span>
+                              <span className="text-zinc-500 dark:text-zinc-400">string</span>
                             </div>
                           ))}
                         </div>
@@ -111,7 +111,7 @@ export const Services: React.FC = () => {
 
                     {/* Response Preview */}
                     <div>
-                      <h4 className="text-xs font-mono uppercase text-zinc-500 mb-3 flex items-center gap-2">
+                      <h4 className="text-xs font-mono uppercase text-zinc-500 dark:text-zinc-400 mb-3 flex items-center gap-2">
                         <Code2 className="w-3 h-3" /> Response Preview
                       </h4>
                       <div className="bg-zinc-950 rounded border border-zinc-800 p-3 overflow-hidden relative group">
