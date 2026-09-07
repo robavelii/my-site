@@ -1,5 +1,6 @@
 import React from 'react';
-import { Mail, Linkedin, Github, MapPin, Clock } from 'lucide-react';
+import { Clock, Mail, MapPin } from 'lucide-react';
+import { Github, Linkedin } from '../ui/BrandIcons';
 import { SectionHeader } from '../ui/SectionHeader';
 import { CONTACT_EMAIL } from '../../data/constants';
 

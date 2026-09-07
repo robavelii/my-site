@@ -1,17 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  ArrowRight,
-  Check,
-  Copy,
-  Download,
-  Github,
-  Laptop,
-  Linkedin,
-  Mail,
-  Moon,
-  Search,
-  Sun,
-} from 'lucide-react';
+import { ArrowRight, Check, Copy, Download, Laptop, Mail, Moon, Search, Sun } from 'lucide-react';
+import { Github, Linkedin } from './BrandIcons';
 import { CONTACT_EMAIL, SECTIONS, SOCIAL } from '../../data/constants';
 import { useTheme } from '../../context/ThemeContext';
 

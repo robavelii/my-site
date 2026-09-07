@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ExternalLink, GitBranch, Github, Lock } from 'lucide-react';
+import { ExternalLink, GitBranch, Lock } from 'lucide-react';
+import { Github } from '../ui/BrandIcons';
 import { PROJECTS } from '../../data/constants';
 import { ArchitectureDiagram } from '../ArchitectureDiagram';
 import { Badge } from '../ui/Badge';
