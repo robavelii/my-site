@@ -120,8 +120,18 @@ read -r -d '' CACHE_RULES <<'JSON' || true
       }
     },
     {
+      "description": "Resume - short TTL, it is updated out of band",
+      "expression": "(http.request.uri.path eq \"/resume.pdf\")",
+      "action": "set_cache_settings",
+      "action_parameters": {
+        "cache": true,
+        "edge_ttl":    { "mode": "override_origin", "default": 300 },
+        "browser_ttl": { "mode": "override_origin", "default": 300 }
+      }
+    },
+    {
       "description": "Unhashed root static assets - short TTL so updates propagate",
-      "expression": "(http.request.uri.path in {\"/favicon.svg\" \"/robots.txt\" \"/sitemap.xml\" \"/resume.pdf\" \"/robel-fekadu.jpg\"})",
+      "expression": "(http.request.uri.path in {\"/favicon.svg\" \"/robots.txt\" \"/sitemap.xml\" \"/robel-fekadu.jpg\" \"/avatar.jpg\" \"/og-card.jpg\"})",
       "action": "set_cache_settings",
       "action_parameters": {
         "cache": true,

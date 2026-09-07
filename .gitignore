@@ -30,3 +30,4 @@ cloudflare-token.txt
 *token*.txt
 *.token
 .env*.local
+.env*
