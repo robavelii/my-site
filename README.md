@@ -60,6 +60,15 @@ The Cloudflare side lives in [`infra/cloudflare-config.sh`](./infra/cloudflare-c
 run it with no arguments for a dry run that prints the current state and the proposed
 changes, or `--apply` to commit them (it backs up the existing config first).
 
+The Content-Security-Policy is defined in [`infra/csp.sh`](./infra/csp.sh). It allows the
+inline theme guard by SHA-256 hash rather than `'unsafe-inline'`, so **Rocket Loader must
+stay off** and editing that inline script means updating the hash —
+`infra/verify-csp-hash.sh` enforces this and CI runs it.
+
+One known CSP violation is expected: Cloudflare **JS Detections** injects a nonce-less
+inline script that cannot be hashed reliably. See the notes in `infra/csp.sh`; the site is
+fully functional either way.
+
 ### Quick Deploy
 
 ```bash
