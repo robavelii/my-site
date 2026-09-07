@@ -30,7 +30,7 @@ const CERTIFICATIONS: Certification[] = [
 export const Certifications: React.FC = () => {
   return (
     <section id="certifications">
-      <SectionHeader title="Certifications & Credentials" icon={Award} />
+      <SectionHeader eyebrow="Verified Credentials" title="Certifications" icon={Award} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {CERTIFICATIONS.map((cert, idx) => (

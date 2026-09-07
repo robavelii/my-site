@@ -6,7 +6,7 @@ import { CONTACT_EMAIL } from '../../data/constants';
 export const Contact: React.FC = () => {
   return (
     <section id="contact">
-      <SectionHeader title="System Connection (Contact)" icon={Mail} />
+      <SectionHeader eyebrow="System Connection" title="Contact" icon={Mail} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Contact Information */}

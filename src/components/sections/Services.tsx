@@ -8,7 +8,7 @@ export const Services: React.FC = () => {
 
   return (
     <section id="services">
-      <SectionHeader title="System Interface (Services)" icon={Server} />
+      <SectionHeader eyebrow="System Interface" title="Services" icon={Server} />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 border border-zinc-200 dark:border-zinc-800 rounded-lg bg-white dark:bg-zinc-950 shadow-sm dark:shadow-none overflow-hidden">
         {/* Sidebar (Endpoint List) */}

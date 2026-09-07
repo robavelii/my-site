@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -14,72 +14,81 @@ interface ThemeProviderState {
   toggleTheme: () => void;
 }
 
-const initialState: ThemeProviderState = {
-  theme: 'system',
-  setTheme: () => null,
-  toggleTheme: () => null,
-};
+// No default value: useTheme's guard below can then actually fire. Previously
+// it checked for undefined while createContext had been given a real object, so
+// using the hook outside a provider silently returned no-op setters.
+const ThemeContext = createContext<ThemeProviderState | undefined>(undefined);
 
-const ThemeContext = createContext<ThemeProviderState>(initialState);
+const readStoredTheme = (storageKey: string, fallback: Theme): Theme => {
+  try {
+    const stored = localStorage.getItem(storageKey);
+    return stored === 'light' || stored === 'dark' || stored === 'system' ? stored : fallback;
+  } catch {
+    // Private mode and blocked storage both throw on access.
+    return fallback;
+  }
+};
 
 export function ThemeProvider({
   children,
   defaultTheme = 'system',
   storageKey = 'vite-ui-theme',
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
-  );
+  const [theme, setThemeState] = useState<Theme>(() => readStoredTheme(storageKey, defaultTheme));
 
-  useEffect(() => {
+  const apply = useCallback((next: Theme) => {
     const root = window.document.documentElement;
+    const resolved =
+      next === 'system'
+        ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light'
+        : next;
     root.classList.remove('light', 'dark');
+    root.classList.add(resolved);
+  }, []);
 
-    if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light';
-      root.classList.add(systemTheme);
-      return;
-    }
+  useEffect(() => apply(theme), [theme, apply]);
 
-    root.classList.add(theme);
-  }, [theme]);
+  // In 'system' mode, follow the OS if it changes while the page is open.
+  // Previously the preference was read once and never revisited.
+  useEffect(() => {
+    if (theme !== 'system') return;
+    const query = window.matchMedia('(prefers-color-scheme: dark)');
+    const onChange = () => apply('system');
+    query.addEventListener('change', onChange);
+    return () => query.removeEventListener('change', onChange);
+  }, [theme, apply]);
 
-  const getCurrentTheme = (): 'light' | 'dark' => {
-    if (theme === 'system') {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-    return theme;
-  };
-
-  const toggleTheme = () => {
-    const currentTheme = getCurrentTheme();
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    localStorage.setItem(storageKey, newTheme);
-    setTheme(newTheme);
-  };
-
-  const value = {
-    theme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme);
-      setTheme(theme);
+  const setTheme = useCallback(
+    (next: Theme) => {
+      try {
+        localStorage.setItem(storageKey, next);
+      } catch {
+        // Not fatal - the theme still applies for this page view.
+      }
+      setThemeState(next);
     },
-    toggleTheme,
-  };
-
-  return (
-    <ThemeContext.Provider value={value} {...props}>
-      {children}
-    </ThemeContext.Provider>
+    [storageKey]
   );
+
+  const toggleTheme = useCallback(() => {
+    const current =
+      theme === 'system'
+        ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light'
+        : theme;
+    setTheme(current === 'dark' ? 'light' : 'dark');
+  }, [theme, setTheme]);
+
+  const value = useMemo(() => ({ theme, setTheme, toggleTheme }), [theme, setTheme, toggleTheme]);
+
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
 
 export const useTheme = () => {
   const context = useContext(ThemeContext);
-  if (context === undefined) throw new Error('useTheme must be used within a ThemeProvider');
+  if (!context) throw new Error('useTheme must be used within a ThemeProvider');
   return context;
 };
-
-const props = {};

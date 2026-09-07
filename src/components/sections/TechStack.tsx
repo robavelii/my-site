@@ -6,8 +6,8 @@ import { SectionHeader } from '../ui/SectionHeader';
 export const TechStack: React.FC = () => {
   return (
     <section id="stack">
-      <SectionHeader title="Infrastructure & Stack" icon={Layers} />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+      <SectionHeader eyebrow="Infrastructure" title="Stack" icon={Layers} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-6">
         {TECH_STACK.map((cat, idx) => (
           <div key={idx} className="space-y-3">
             <h3 className="text-xs font-mono uppercase text-zinc-500 dark:text-zinc-400 pl-1 flex items-center gap-2">
@@ -17,7 +17,7 @@ export const TechStack: React.FC = () => {
               {cat.name === 'Interface' && <Globe className="w-3 h-3" />}
               {cat.name}
             </h3>
-            <div className="grid grid-cols-1 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-1 gap-2">
               {cat.skills.map((skill) => {
                 const config = getTechConfig(skill);
                 const Icon = config.icon;
