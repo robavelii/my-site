@@ -111,7 +111,8 @@ vercel --prod
 1. **Images:** `public/avatar.jpg` (256px square, shown in the hero) and
    `public/og-card.jpg` (1200x630 social card, regenerate with
    `./infra/build-og-card.sh`). `public/robel-fekadu.jpg` is the full-size source.
-2. **Resume:** Add your PDF resume to `/public/resume.pdf`
+2. **Résumé:** `./infra/resume.sh path/to/new.pdf` publishes a new PDF with no
+   rebuild and no redeploy — see [Updating the résumé](#updating-the-résumé).
 3. **Email:** Change `CONTACT_EMAIL` in `src/data/constants.ts` - it is the
    single source for the footer, the contact card and both CTAs
 4. **Projects:** Edit `src/data/constants.ts` to add/modify projects
@@ -130,6 +131,32 @@ import { Certifications } from './src/components/sections/Certifications';
 <Testimonials />
 <Certifications />
 ```
+
+## 📄 Updating the résumé
+
+```bash
+./infra/resume.sh ~/Documents/personal/Resume/Robel-Fekadu-Resume.pdf   # publish
+./infra/resume.sh --status                                              # what's live
+```
+
+The PDF lives in a Vercel Blob store and `vercel.json` rewrites `/resume.pdf` to
+it. A rewrite *proxies* rather than redirects, so the browser still sees a
+same-origin `/resume.pdf` — which matters, because the `<a download>` attribute is
+ignored cross-origin and the CSP is scoped to `'self'`. Uploading overwrites the
+same pathname, so the public URL never changes and nothing is rebuilt; the
+cache-control is 5 minutes, so a new version is live within that.
+
+The script refuses anything that isn't a genuine, complete PDF — a broken résumé
+link is worse than a stale one.
+
+`public/resume.pdf` stays committed as a fallback: remove the rewrite and the
+file is still there, so `/resume.pdf` keeps working either way.
+
+**One-time setup** (see the header of `infra/resume.sh`): create a Blob store in
+*Vercel dashboard → Storage → Create Database → Blob*, connect it to the project,
+then run `vercel link` once from this directory. Until that exists the résumé is
+served from the committed file, and updating it means editing that file and
+letting Vercel redeploy.
 
 ## 🔧 Configuration
 
