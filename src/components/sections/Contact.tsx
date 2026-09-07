@@ -137,7 +137,7 @@ export const Contact: React.FC = () => {
             <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800">
               <p className="text-xs font-mono text-zinc-500 dark:text-zinc-400">
                 Response time:{' '}
-                <span className="text-emerald-700 dark:text-emerald-400">~24 hours</span>
+                <span className="text-emerald-700 dark:text-emerald-400">~2 hours</span>
               </p>
             </div>
           </div>

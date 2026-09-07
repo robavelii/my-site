@@ -143,8 +143,13 @@ export const Projects: React.FC = () => {
                               <h4 className="text-xs font-mono uppercase text-zinc-500 dark:text-zinc-400 mb-4">
                                 System Diagram
                               </h4>
-                              <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 overflow-hidden bg-grid">
+                              <div className="relative bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 overflow-hidden bg-grid">
                                 <ArchitectureDiagram nodes={project.architecture.nodes} />
+                                {/* Signals that the diagram continues past the edge. */}
+                                <div
+                                  aria-hidden="true"
+                                  className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-white dark:from-zinc-900 to-transparent"
+                                />
                               </div>
                             </div>
                           </div>

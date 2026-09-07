@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { ThemeProvider } from './src/context/ThemeContext';
-import { Header } from './src/components/layout/Header';
-import { Hero } from './src/components/sections/Hero';
-import { Services } from './src/components/sections/Services';
-import { Projects } from './src/components/sections/Projects';
-import { TechStack } from './src/components/sections/TechStack';
-import { Contact } from './src/components/sections/Contact';
-import { useKeyboardShortcut } from './src/hooks/useKeyboardShortcut';
-import { CommandPalette } from './src/components/ui/CommandPalette';
-import { ParticleNetwork } from './src/components/ui/ParticleNetwork';
-import { CONTACT_EMAIL, SOCIAL } from './src/data/constants';
+import { ThemeProvider } from './context/ThemeContext';
+import { Header } from './components/layout/Header';
+import { Hero } from './components/sections/Hero';
+import { Services } from './components/sections/Services';
+import { Projects } from './components/sections/Projects';
+import { TechStack } from './components/sections/TechStack';
+import { Contact } from './components/sections/Contact';
+import { useKeyboardShortcut } from './hooks/useKeyboardShortcut';
+import { CommandPalette } from './components/ui/CommandPalette';
+import { ParticleNetwork } from './components/ui/ParticleNetwork';
+import { CONTACT_EMAIL, SOCIAL } from './data/constants';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Analytics } from '@vercel/analytics/react';
 
