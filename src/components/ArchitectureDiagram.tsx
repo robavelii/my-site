@@ -8,22 +8,18 @@ export const ArchitectureDiagram: React.FC<{ nodes: ArchitectureNode[] }> = ({ n
   const [dragStartX, setDragStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handlePointerDown = (e: React.PointerEvent) => {
     if (!scrollContainerRef.current) return;
+    // Touch already scrolls natively; only take over for mouse and pen.
+    if (e.pointerType === 'touch') return;
     setIsDragging(true);
     setDragStartX(e.pageX - scrollContainerRef.current.offsetLeft);
     setScrollLeft(scrollContainerRef.current.scrollLeft);
   };
 
-  const handleMouseLeave = () => {
-    setIsDragging(false);
-  };
+  const stopDragging = () => setIsDragging(false);
 
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handlePointerMove = (e: React.PointerEvent) => {
     if (!isDragging || !scrollContainerRef.current) return;
     e.preventDefault();
     const x = e.pageX - scrollContainerRef.current.offsetLeft;
@@ -47,10 +43,12 @@ export const ArchitectureDiagram: React.FC<{ nodes: ArchitectureNode[] }> = ({ n
       tabIndex={0}
       role="group"
       aria-label={`Architecture diagram, ${nodes.length} nodes, scrolls horizontally`}
-      onMouseDown={handleMouseDown}
-      onMouseLeave={handleMouseLeave}
-      onMouseUp={handleMouseUp}
-      onMouseMove={handleMouseMove}
+      onPointerDown={handlePointerDown}
+      onPointerLeave={stopDragging}
+      onPointerUp={stopDragging}
+      onPointerCancel={stopDragging}
+      onPointerMove={handlePointerMove}
+      style={{ touchAction: 'pan-x' }}
     >
       <svg width={Math.max(totalWidth, 200)} height={height} className="font-mono text-xs block">
         <defs>

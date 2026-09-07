@@ -12,6 +12,8 @@
 #      the script will source it automatically. Never keep it inside the repo.
 #   ./infra/cloudflare-config.sh           # dry run — prints the plan, changes nothing
 #   ./infra/cloudflare-config.sh --apply   # backs up current config, then applies
+#   ./infra/cloudflare-config.sh --apply --dns    # also add the www -> apex redirect
+#   ./infra/cloudflare-config.sh --apply --purge  # also purge the cache
 #
 # Token needs these permissions on the robelfekadu.com zone:
 #   Zone / Zone           / Read
@@ -19,6 +21,7 @@
 #   Zone / Transform Rules/ Edit
 #   Zone / Zone Settings  / Edit
 #   Zone / Cache Purge    / Purge      (only for --purge)
+#   Zone / DNS            / Edit       (only for --dns)
 # Create at: dash.cloudflare.com -> My Profile -> API Tokens -> Create Token
 # ---------------------------------------------------------------------------
 set -euo pipefail
@@ -26,12 +29,13 @@ set -euo pipefail
 ZONE_NAME="robelfekadu.com"
 API="https://api.cloudflare.com/client/v4"
 BACKUP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.cf-backups"
-APPLY=0; PURGE=0
+APPLY=0; PURGE=0; DNS=0
 
 for arg in "$@"; do
   case "$arg" in
     --apply) APPLY=1 ;;
     --purge) PURGE=1 ;;
+    --dns)   DNS=1 ;;
     -h|--help) sed -n '2,25p' "$0"; exit 0 ;;
     *) echo "unknown flag: $arg" >&2; exit 2 ;;
   esac
@@ -143,6 +147,16 @@ read -r -d '' HEADER_RULES <<'JSON' || true
           "Access-Control-Allow-Origin": { "operation": "remove" }
         }
       }
+    },
+    {
+      "description": "Hashed assets are immutable, not merely long-lived",
+      "expression": "(starts_with(http.request.uri.path, \"/assets/\"))",
+      "action": "rewrite",
+      "action_parameters": {
+        "headers": {
+          "Cache-Control": { "operation": "set", "value": "public, max-age=31536000, immutable" }
+        }
+      }
     }
   ]
 }
@@ -168,7 +182,7 @@ if [[ $APPLY -eq 0 ]]; then
     | jq -r '(.result.rules // []) | if length == 0 then "     (none)" else .[] | "     - \(.description // .expression)" end'
   echo
   echo "3) Response header rules (phase http_response_headers_transform):"
-  jq -r '.rules[0].action_parameters.headers | to_entries[] | "   - \(.key): \(.value.operation) \(.value.value // "")"' <<<"$HEADER_RULES"
+  jq -r '.rules[] | "   - \(.description):", (.action_parameters.headers | to_entries[] | "       \(.key): \(.value.operation) \(.value.value // "")")' <<<"$HEADER_RULES"
   echo
   echo "   existing rules in this phase:"
   cf GET "/zones/$ZONE_ID/rulesets/phases/http_response_headers_transform/entrypoint" \
@@ -177,7 +191,9 @@ if [[ $APPLY -eq 0 ]]; then
   echo "NOT touched by this script (decide separately):"
   echo "   - HSTS includeSubDomains / preload"
   echo "   - Content-Security-Policy"
-  echo "   - the www CNAME and the dpdns.org redirect"
+  echo "   - the www CNAME + redirect (pass --dns; needs Zone/DNS/Edit on the token)"
+  echo "   - the dpdns.org 301 (that host is not in this zone; the canonical tag"
+  echo "     already points search engines at the .com)"
   exit 0
 fi
 
@@ -209,6 +225,39 @@ echo "→ response header rules"
 R="$(cf PUT "/zones/$ZONE_ID/rulesets/phases/http_response_headers_transform/entrypoint" "$HEADER_RULES")"
 check "$R" "header rules"
 echo "  ✓ $(jq -r '.result.rules | length' <<<"$R") rule(s) active"
+
+if [[ $DNS -eq 1 ]]; then
+  echo "→ www.$ZONE_NAME -> apex"
+  EXISTING="$(cf GET "/zones/$ZONE_ID/dns_records?name=www.$ZONE_NAME")"
+  if [[ "$(jq -r '.result | length' <<<"$EXISTING")" == "0" ]]; then
+    R="$(cf POST "/zones/$ZONE_ID/dns_records" "$(jq -n --arg n "www.$ZONE_NAME" --arg c "$ZONE_NAME" \
+      '{type:"CNAME", name:$n, content:$c, proxied:true, ttl:1, comment:"www -> apex, redirected at the edge"}')")"
+    check "$R" "www CNAME"
+    echo "  ✓ CNAME created"
+  else
+    echo "  · CNAME already exists, leaving it alone"
+  fi
+
+  # 301 www -> apex, preserving path and query
+  R="$(cf PUT "/zones/$ZONE_ID/rulesets/phases/http_request_dynamic_redirect/entrypoint" '{
+    "rules": [
+      {
+        "description": "www -> apex, 301",
+        "expression": "(http.host eq \"www.'"$ZONE_NAME"'\")",
+        "action": "redirect",
+        "action_parameters": {
+          "from_value": {
+            "status_code": 301,
+            "target_url": { "expression": "concat(\"https://'"$ZONE_NAME"'\", http.request.uri.path)" },
+            "preserve_query_string": true
+          }
+        }
+      }
+    ]
+  }')"
+  check "$R" "www redirect rule"
+  echo "  ✓ 301 redirect rule active"
+fi
 
 if [[ $PURGE -eq 1 ]]; then
   echo "→ purging everything"
