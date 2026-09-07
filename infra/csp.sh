@@ -24,12 +24,32 @@
 # allowed), React, the theme guard and the command palette.
 #
 # Three ways out, in order of preference:
-#   1. Turn JS Detections off (Security -> Bots). It is near-worthless on a
-#      static site with no forms or login, and DDoS/WAF protection is unaffected.
-#      The console goes quiet and the dashboard stops claiming a feature that is
-#      in fact blocked.
-#   2. Accept it. The site is fully functional; only bot scoring loses a signal.
-#   3. Do NOT add 'unsafe-inline' to make it go away -- that would also
+#   1. Suppress the injection at the origin. Cloudflare skips JSD when the
+#      ORIGIN response carries Cache-Control: no-transform, so that header is
+#      set on "/" in vercel.json. It has to come from Vercel, not from a
+#      Cloudflare response-header rule -- those run after the injection
+#      decision has already been made.
+#
+#      Note this is the one deliberate exception to "Cloudflare owns the
+#      headers": no-transform only does anything if the origin sends it.
+#
+#      It costs nothing here. no-transform also disables Email Address
+#      Obfuscation, but that only rewrites addresses present in the HTML, and
+#      this site renders contact@ from the JS bundle -- the served HTML
+#      contains zero occurrences of it. It also drops Cloudflare's own
+#      analytics beacon, which is redundant next to Vercel Analytics and
+#      Speed Insights.
+#
+#   2. Turning JS Detections off is NOT available on this plan: Cloudflare
+#      enables it automatically for Bot Fight Mode customers and it cannot be
+#      switched off. That is why there is no toggle in the dashboard.
+#
+#   3. Cloudflare's own recommendation is a per-request CSP nonce, which it
+#      parses and copies onto the scripts it injects. That needs a Worker to
+#      generate the nonce per response -- a static header cannot, since a
+#      fixed nonce is no better than 'unsafe-inline'.
+#
+#   4. Do NOT add 'unsafe-inline' to make it go away -- that would also
 #      re-permit every other inline script and negate the hash entirely.
 set -euo pipefail
 
