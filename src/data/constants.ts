@@ -280,134 +280,139 @@ export const TECH_STACK: TechCategory[] = [
   { name: 'Interface', skills: ['React', 'TypeScript', 'Next.js', 'Tailwind'] },
 ];
 
-export const getTechConfig = (techName: string) => {
-  const config: Record<
-    string,
-    { icon: React.ElementType; color: string; bg: string; border: string }
-  > = {
-    // Compute
-    'Node.js': {
-      icon: Hexagon,
-      color: 'text-green-600 dark:text-green-500',
-      bg: 'bg-green-100 dark:bg-green-900/20',
-      border: 'hover:border-green-500 dark:hover:border-green-500',
-    },
-    Python: {
-      icon: FileCode,
-      color: 'text-yellow-600 dark:text-yellow-500',
-      bg: 'bg-yellow-100 dark:bg-yellow-900/20',
-      border: 'hover:border-yellow-500 dark:hover:border-yellow-500',
-    },
-    Go: {
-      icon: Zap,
-      color: 'text-cyan-600 dark:text-cyan-400',
-      bg: 'bg-cyan-100 dark:bg-cyan-900/20',
-      border: 'hover:border-cyan-500 dark:hover:border-cyan-400',
-    },
-    NestJS: {
-      icon: Hexagon,
-      color: 'text-red-600 dark:text-red-500',
-      bg: 'bg-red-100 dark:bg-red-900/20',
-      border: 'hover:border-red-500 dark:hover:border-red-500',
-    },
-    Django: {
-      icon: Layers,
-      color: 'text-emerald-700 dark:text-emerald-500',
-      bg: 'bg-emerald-100 dark:bg-emerald-900/20',
-      border: 'hover:border-emerald-500 dark:hover:border-emerald-500',
-    },
+interface TechConfig {
+  icon: React.ElementType;
+  color: string;
+  bg: string;
+  border: string;
+}
 
-    // Data
-    PostgreSQL: {
-      icon: Database,
-      color: 'text-blue-600 dark:text-blue-400',
-      bg: 'bg-blue-100 dark:bg-blue-900/20',
-      border: 'hover:border-blue-500 dark:hover:border-blue-500',
-    },
-    Redis: {
-      icon: Database,
-      color: 'text-red-600 dark:text-red-500',
-      bg: 'bg-red-100 dark:bg-red-900/20',
-      border: 'hover:border-red-500 dark:hover:border-red-500',
-    },
-    ElasticSearch: {
-      icon: Search,
-      color: 'text-yellow-600 dark:text-yellow-500',
-      bg: 'bg-yellow-100 dark:bg-yellow-900/20',
-      border: 'hover:border-yellow-500 dark:hover:border-yellow-500',
-    },
-    MongoDB: {
-      icon: Leaf,
-      color: 'text-green-600 dark:text-green-500',
-      bg: 'bg-green-100 dark:bg-green-900/20',
-      border: 'hover:border-green-500 dark:hover:border-green-500',
-    },
+// Module scope, not rebuilt inside getTechConfig: it was being reconstructed
+// on every call, once per skill per render.
+const TECH_CONFIG: Record<string, TechConfig> = {
+  // Compute
+  'Node.js': {
+    icon: Hexagon,
+    color: 'text-green-600 dark:text-green-500',
+    bg: 'bg-green-100 dark:bg-green-900/20',
+    border: 'hover:border-green-500 dark:hover:border-green-500',
+  },
+  Python: {
+    icon: FileCode,
+    color: 'text-yellow-600 dark:text-yellow-500',
+    bg: 'bg-yellow-100 dark:bg-yellow-900/20',
+    border: 'hover:border-yellow-500 dark:hover:border-yellow-500',
+  },
+  Go: {
+    icon: Zap,
+    color: 'text-cyan-600 dark:text-cyan-400',
+    bg: 'bg-cyan-100 dark:bg-cyan-900/20',
+    border: 'hover:border-cyan-500 dark:hover:border-cyan-400',
+  },
+  NestJS: {
+    icon: Hexagon,
+    color: 'text-red-600 dark:text-red-500',
+    bg: 'bg-red-100 dark:bg-red-900/20',
+    border: 'hover:border-red-500 dark:hover:border-red-500',
+  },
+  Django: {
+    icon: Layers,
+    color: 'text-emerald-700 dark:text-emerald-500',
+    bg: 'bg-emerald-100 dark:bg-emerald-900/20',
+    border: 'hover:border-emerald-500 dark:hover:border-emerald-500',
+  },
 
-    // Infra
-    Docker: {
-      icon: Container,
-      color: 'text-blue-500 dark:text-blue-400',
-      bg: 'bg-blue-50 dark:bg-blue-900/20',
-      border: 'hover:border-blue-400 dark:hover:border-blue-400',
-    },
-    Kubernetes: {
-      icon: Network,
-      color: 'text-blue-700 dark:text-blue-300',
-      bg: 'bg-blue-100 dark:bg-blue-900/20',
-      border: 'hover:border-blue-600 dark:hover:border-blue-400',
-    },
-    AWS: {
-      icon: Cloud,
-      color: 'text-orange-600 dark:text-orange-500',
-      bg: 'bg-orange-100 dark:bg-orange-900/20',
-      border: 'hover:border-orange-500 dark:hover:border-orange-500',
-    },
-    Nginx: {
-      icon: Server,
-      color: 'text-green-700 dark:text-green-400',
-      bg: 'bg-green-100 dark:bg-green-900/20',
-      border: 'hover:border-green-600 dark:hover:border-green-500',
-    },
-    Linux: {
-      icon: TerminalIcon,
-      color: 'text-zinc-700 dark:text-zinc-300',
-      bg: 'bg-zinc-100 dark:bg-zinc-900/20',
-      border: 'hover:border-zinc-400 dark:hover:border-zinc-500',
-    },
+  // Data
+  PostgreSQL: {
+    icon: Database,
+    color: 'text-blue-600 dark:text-blue-400',
+    bg: 'bg-blue-100 dark:bg-blue-900/20',
+    border: 'hover:border-blue-500 dark:hover:border-blue-500',
+  },
+  Redis: {
+    icon: Database,
+    color: 'text-red-600 dark:text-red-500',
+    bg: 'bg-red-100 dark:bg-red-900/20',
+    border: 'hover:border-red-500 dark:hover:border-red-500',
+  },
+  ElasticSearch: {
+    icon: Search,
+    color: 'text-yellow-600 dark:text-yellow-500',
+    bg: 'bg-yellow-100 dark:bg-yellow-900/20',
+    border: 'hover:border-yellow-500 dark:hover:border-yellow-500',
+  },
+  MongoDB: {
+    icon: Leaf,
+    color: 'text-green-600 dark:text-green-500',
+    bg: 'bg-green-100 dark:bg-green-900/20',
+    border: 'hover:border-green-500 dark:hover:border-green-500',
+  },
 
-    // Interface
-    React: {
-      icon: Atom,
-      color: 'text-cyan-500 dark:text-cyan-400',
-      bg: 'bg-cyan-100 dark:bg-cyan-900/20',
-      border: 'hover:border-cyan-400 dark:hover:border-cyan-400',
-    },
-    TypeScript: {
-      icon: Code2,
-      color: 'text-blue-600 dark:text-blue-400',
-      bg: 'bg-blue-100 dark:bg-blue-900/20',
-      border: 'hover:border-blue-500 dark:hover:border-blue-500',
-    },
-    'Next.js': {
-      icon: Zap,
-      color: 'text-zinc-900 dark:text-zinc-100',
-      bg: 'bg-zinc-100 dark:bg-zinc-800',
-      border: 'hover:border-zinc-900 dark:hover:border-zinc-100',
-    },
-    Tailwind: {
-      icon: Wind,
-      color: 'text-cyan-500 dark:text-cyan-400',
-      bg: 'bg-cyan-100 dark:bg-cyan-900/20',
-      border: 'hover:border-cyan-400 dark:hover:border-cyan-400',
-    },
-  };
+  // Infra
+  Docker: {
+    icon: Container,
+    color: 'text-blue-500 dark:text-blue-400',
+    bg: 'bg-blue-50 dark:bg-blue-900/20',
+    border: 'hover:border-blue-400 dark:hover:border-blue-400',
+  },
+  Kubernetes: {
+    icon: Network,
+    color: 'text-blue-700 dark:text-blue-300',
+    bg: 'bg-blue-100 dark:bg-blue-900/20',
+    border: 'hover:border-blue-600 dark:hover:border-blue-400',
+  },
+  AWS: {
+    icon: Cloud,
+    color: 'text-orange-600 dark:text-orange-500',
+    bg: 'bg-orange-100 dark:bg-orange-900/20',
+    border: 'hover:border-orange-500 dark:hover:border-orange-500',
+  },
+  Nginx: {
+    icon: Server,
+    color: 'text-green-700 dark:text-green-400',
+    bg: 'bg-green-100 dark:bg-green-900/20',
+    border: 'hover:border-green-600 dark:hover:border-green-500',
+  },
+  Linux: {
+    icon: TerminalIcon,
+    color: 'text-zinc-700 dark:text-zinc-300',
+    bg: 'bg-zinc-100 dark:bg-zinc-900/20',
+    border: 'hover:border-zinc-400 dark:hover:border-zinc-500',
+  },
 
-  return (
-    config[techName] || {
-      icon: Box,
-      color: 'text-zinc-500 dark:text-zinc-400',
-      bg: 'bg-zinc-100 dark:bg-zinc-800',
-      border: 'hover:border-zinc-300',
-    }
-  );
+  // Interface
+  React: {
+    icon: Atom,
+    color: 'text-cyan-500 dark:text-cyan-400',
+    bg: 'bg-cyan-100 dark:bg-cyan-900/20',
+    border: 'hover:border-cyan-400 dark:hover:border-cyan-400',
+  },
+  TypeScript: {
+    icon: Code2,
+    color: 'text-blue-600 dark:text-blue-400',
+    bg: 'bg-blue-100 dark:bg-blue-900/20',
+    border: 'hover:border-blue-500 dark:hover:border-blue-500',
+  },
+  'Next.js': {
+    icon: Zap,
+    color: 'text-zinc-900 dark:text-zinc-100',
+    bg: 'bg-zinc-100 dark:bg-zinc-800',
+    border: 'hover:border-zinc-900 dark:hover:border-zinc-100',
+  },
+  Tailwind: {
+    icon: Wind,
+    color: 'text-cyan-500 dark:text-cyan-400',
+    bg: 'bg-cyan-100 dark:bg-cyan-900/20',
+    border: 'hover:border-cyan-400 dark:hover:border-cyan-400',
+  },
 };
+
+const FALLBACK_TECH_CONFIG: TechConfig = {
+  icon: Box,
+  color: 'text-zinc-500 dark:text-zinc-400',
+  bg: 'bg-zinc-100 dark:bg-zinc-800',
+  border: 'hover:border-zinc-300',
+};
+
+export const getTechConfig = (techName: string): TechConfig =>
+  TECH_CONFIG[techName] ?? FALLBACK_TECH_CONFIG;

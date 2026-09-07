@@ -31,7 +31,7 @@ const TESTIMONIALS: Testimonial[] = [
 export const Testimonials: React.FC = () => {
   return (
     <section id="testimonials">
-      <SectionHeader title="Client Testimonials" icon={Quote} />
+      <SectionHeader eyebrow="Client Feedback" title="Testimonials" icon={Quote} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {TESTIMONIALS.map((testimonial, idx) => (

@@ -10,7 +10,7 @@ export const Projects: React.FC = () => {
 
   return (
     <section id="projects">
-      <SectionHeader title="System Architecture (Projects)" icon={GitBranch} />
+      <SectionHeader eyebrow="System Architecture" title="Projects" icon={GitBranch} />
 
       <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden bg-white dark:bg-zinc-950 shadow-sm dark:shadow-none">
         <div

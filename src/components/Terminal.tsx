@@ -5,9 +5,18 @@ interface TerminalProps {
 }
 
 export const Terminal: React.FC<TerminalProps> = ({ data }) => {
-  const [text, setText] = useState('');
   const fullText = JSON.stringify(data, null, 2);
+
+  // Typing it out one character at a time is decoration, so start already
+  // finished when the visitor has asked for less motion.
+  const [prefersReducedMotion] = useState(
+    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
+  const [text, setText] = useState(() => (prefersReducedMotion ? fullText : ''));
+
   useEffect(() => {
+    if (prefersReducedMotion) return;
+
     const intervalId = setInterval(() => {
       setText((prev) => {
         if (prev.length >= fullText.length) {
@@ -19,7 +28,7 @@ export const Terminal: React.FC<TerminalProps> = ({ data }) => {
     }, 20);
 
     return () => clearInterval(intervalId);
-  }, [fullText]);
+  }, [fullText, prefersReducedMotion]);
 
   return (
     <div className="w-full h-full rounded-md border border-zinc-800 bg-zinc-950/80 backdrop-blur-sm shadow-2xl overflow-hidden flex flex-col">

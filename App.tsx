@@ -42,7 +42,7 @@ const AppContent: React.FC = () => {
 
         <main
           id="main-content"
-          className="container mx-auto px-4 pt-24 pb-12 space-y-24 md:space-y-32"
+          className="container mx-auto px-4 pt-24 pb-12 space-y-16 md:space-y-24"
         >
           <Hero />
 

@@ -5,17 +5,18 @@ A modern, high-performance portfolio website built with React, TypeScript, and T
 ## 🚀 Features
 
 - **Dark/Light Mode** - Seamless theme switching with system preference detection
-- **Keyboard Shortcuts** - Press `Ctrl/Cmd + K` to toggle theme (desktop only)
+- **Command Palette** - `Ctrl/Cmd + K` for navigation, theme, résumé and contact
 - **Interactive Components** - Terminal-style skill display and architecture diagrams
 - **8 Featured Projects** - Comprehensive project showcase with technical details
 - **Responsive Design** - Optimized for all screen sizes
-- **SEO Optimized** - Comprehensive meta tags, Open Graph, and Twitter Cards
-- **Accessibility** - WCAG compliant with skip-to-content links and ARIA labels
+- **SEO Optimized** - Meta tags, Open Graph card, canonical URL, sitemap
+- **Accessibility** - Skip-to-content, keyboard-operable disclosures, AA contrast
+  (verified with axe-core: 0 violations at 1440px light/dark and 390px)
 - **Performance** - Built with Vite for lightning-fast builds and HMR
 
 ## 🛠️ Tech Stack
 
-- **Framework:** React 18 with TypeScript
+- **Framework:** React 19 with TypeScript
 - **Build Tool:** Vite
 - **Styling:** Tailwind CSS
 - **Icons:** Lucide React
@@ -91,17 +92,19 @@ vercel --prod
 
 ## ⌨️ Keyboard Shortcuts
 
-- `Ctrl + K` (Windows/Linux) or `Cmd + K` (Mac) - Toggle dark/light mode
+- `Ctrl + K` / `Cmd + K` - open the command palette
+- Inside the palette: `↑`/`↓` to move, `↵` to run, `esc` to close
 
 ## 🎨 Customization
 
 ### Update Personal Information
 
-1. **Profile Image:** Replace `/public/robel-fekadu.jpg` with your photo
+1. **Images:** `public/avatar.jpg` (256px square, shown in the hero) and
+   `public/og-card.jpg` (1200x630 social card, regenerate with
+   `./infra/build-og-card.sh`). `public/robel-fekadu.jpg` is the full-size source.
 2. **Resume:** Add your PDF resume to `/public/resume.pdf`
-3. **Email:** Update email addresses in:
-   - `App.tsx` (footer)
-   - `src/components/sections/Contact.tsx`
+3. **Email:** Change `CONTACT_EMAIL` in `src/data/constants.ts` - it is the
+   single source for the footer, the contact card and both CTAs
 4. **Projects:** Edit `src/data/constants.ts` to add/modify projects
 5. **Social Links:** Update GitHub, LinkedIn URLs in `Contact.tsx` and `App.tsx`
 
@@ -129,11 +132,17 @@ import { Certifications } from './src/components/sections/Certifications';
 ## 📝 Scripts
 
 ```bash
-npm run dev      # Start development server
-npm run build    # Build for production
-npm run preview  # Preview production build
-npm run lint     # Run ESLint
+npm run dev        # Start development server
+npm run build      # Typecheck, then build for production
+npm run preview    # Preview production build
+npm run lint       # ESLint (zero warnings allowed)
+npm run typecheck  # tsc --noEmit
+npm test           # Vitest, single run
+npm run test:watch # Vitest in watch mode
+npm run format     # Prettier
 ```
+
+Requires Node >= 20 (see `.nvmrc`); the test environment needs it.
 
 ## 🌐 Browser Support
 
@@ -143,7 +152,7 @@ npm run lint     # Run ESLint
 
 ## 📄 License
 
-MIT License - feel free to use this template for your own portfolio!
+MIT - see [LICENSE](./LICENSE).
 
 ## 🤝 Contributing
 
