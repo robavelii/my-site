@@ -14,6 +14,8 @@
 #   ./infra/cloudflare-config.sh --apply   # backs up current config, then applies
 #   ./infra/cloudflare-config.sh --apply --dns    # also add the www -> apex redirect
 #   ./infra/cloudflare-config.sh --apply --purge  # also purge the cache
+#   ./infra/cloudflare-config.sh --apply --hsts   # HSTS + includeSubDomains
+#   ./infra/cloudflare-config.sh --apply --hsts-preload   # ...and preload (see warning)
 #
 # Token needs these permissions on the robelfekadu.com zone:
 #   Zone / Zone           / Read
@@ -29,13 +31,15 @@ set -euo pipefail
 ZONE_NAME="robelfekadu.com"
 API="https://api.cloudflare.com/client/v4"
 BACKUP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.cf-backups"
-APPLY=0; PURGE=0; DNS=0
+APPLY=0; PURGE=0; DNS=0; HSTS=0; HSTS_PRELOAD=0
 
 for arg in "$@"; do
   case "$arg" in
     --apply) APPLY=1 ;;
     --purge) PURGE=1 ;;
     --dns)   DNS=1 ;;
+    --hsts)  HSTS=1 ;;
+    --hsts-preload) HSTS=1; HSTS_PRELOAD=1 ;;
     -h|--help) sed -n '2,25p' "$0"; exit 0 ;;
     *) echo "unknown flag: $arg" >&2; exit 2 ;;
   esac
@@ -48,6 +52,10 @@ if [[ -z "${CLOUDFLARE_API_TOKEN:-}" && -r "$TOKEN_FILE" ]]; then
   source "$TOKEN_FILE"
 fi
 : "${CLOUDFLARE_API_TOKEN:?no token. export CLOUDFLARE_API_TOKEN, or write it to $TOKEN_FILE}"
+
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=/dev/null
+source "$REPO_ROOT/infra/csp.sh"
 command -v jq >/dev/null || { echo "jq is required" >&2; exit 1; }
 
 cf() {  # cf <METHOD> <PATH> [JSON_BODY]
@@ -162,6 +170,16 @@ read -r -d '' HEADER_RULES <<'JSON' || true
 }
 JSON
 
+# CSP lives in HEADER_RULES rather than behind a flag, because the header-phase
+# PUT below is wholesale - a rule that is not in here gets dropped on every run.
+HEADER_RULES="$(jq -n --argjson base "$HEADER_RULES" --arg csp "$CSP_VALUE" \
+  '$base | .rules += [{
+     description: "Content-Security-Policy",
+     expression: "true",
+     action: "rewrite",
+     action_parameters: { headers: { "Content-Security-Policy": { operation: "set", value: $csp } } }
+   }]')"
+
 # ---------------------------------------------------------------------------
 # Dry run
 # ---------------------------------------------------------------------------
@@ -188,9 +206,16 @@ if [[ $APPLY -eq 0 ]]; then
   cf GET "/zones/$ZONE_ID/rulesets/phases/http_response_headers_transform/entrypoint" \
     | jq -r '(.result.rules // []) | if length == 0 then "     (none)" else .[] | "     - \(.description // .expression)" end'
   echo
+  echo "4) Content-Security-Policy (applied as part of --apply):"
+  echo "$CSP_VALUE" | fold -w 92 -s | sed 's/^/     /'
+  echo "   Rocket Loader is turned off too - a hash-based CSP requires it."
+  echo "   current rocket_loader: $(jq -r '.result.value' <<<"$(cf GET "/zones/$ZONE_ID/settings/rocket_loader")")"
+  echo
+  echo "5) HSTS (pass --hsts, or --hsts-preload):"
+  cf GET "/zones/$ZONE_ID/settings/security_header" \
+    | jq -r '"     current: " + (.result.value.strict_transport_security | tostring)'
+  echo
   echo "NOT touched by this script (decide separately):"
-  echo "   - HSTS includeSubDomains / preload"
-  echo "   - Content-Security-Policy"
   echo "   - the www CNAME + redirect (pass --dns; needs Zone/DNS/Edit on the token)"
   echo "   - the dpdns.org 301 (that host is not in this zone; the canonical tag"
   echo "     already points search engines at the .com)"
@@ -211,6 +236,17 @@ cf GET "/zones/$ZONE_ID/settings/browser_cache_ttl" \
   > "$BACKUP_DIR/browser-cache-ttl-$STAMP.json"
 echo "  saved 3 files (stamp $STAMP)"
 
+echo "→ verifying the CSP inline-script hash still matches index.html"
+"$REPO_ROOT/infra/verify-csp-hash.sh"
+
+# Rocket Loader injects its own inline scripts, and a CSP hash and
+# 'unsafe-inline' are mutually exclusive - browsers drop 'unsafe-inline' once a
+# hash is present. So Rocket Loader has to be off for the CSP to hold.
+echo "→ Rocket Loader off (incompatible with a hash-based CSP)"
+R="$(cf PATCH "/zones/$ZONE_ID/settings/rocket_loader" '{"value":"off"}')"
+check "$R" "rocket_loader off"
+echo "  ✓"
+
 echo "→ browser_cache_ttl -> respect existing headers"
 R="$(cf PATCH "/zones/$ZONE_ID/settings/browser_cache_ttl" '{"value":0}')"
 check "$R" "browser_cache_ttl"
@@ -225,6 +261,25 @@ echo "→ response header rules"
 R="$(cf PUT "/zones/$ZONE_ID/rulesets/phases/http_response_headers_transform/entrypoint" "$HEADER_RULES")"
 check "$R" "header rules"
 echo "  ✓ $(jq -r '.result.rules | length' <<<"$R") rule(s) active"
+
+if [[ $HSTS -eq 1 ]]; then
+  if [[ $HSTS_PRELOAD -eq 1 ]]; then
+    cat <<'WARN'
+  ! preload is effectively irreversible: once robelfekadu.com is baked into the
+    browser preload lists, every subdomain must serve valid HTTPS for as long as
+    those lists ship. Removal takes months. Only proceed if you are sure no
+    subdomain will ever need plain HTTP.
+WARN
+  fi
+  echo "→ HSTS (max-age 2y, includeSubDomains=$HSTS, preload=$HSTS_PRELOAD)"
+  R="$(cf PATCH "/zones/$ZONE_ID/settings/security_header" "$(jq -n \
+    --argjson preload "$([[ $HSTS_PRELOAD -eq 1 ]] && echo true || echo false)" \
+    '{value: {strict_transport_security: {
+        enabled: true, max_age: 63072000, include_subdomains: true,
+        preload: $preload, nosniff: true }}}')")"
+  check "$R" "HSTS"
+  echo "  ✓"
+fi
 
 if [[ $DNS -eq 1 ]]; then
   echo "→ www.$ZONE_NAME -> apex"
