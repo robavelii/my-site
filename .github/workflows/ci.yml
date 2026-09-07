@@ -15,6 +15,7 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - run: ./infra/verify-csp-hash.sh
       - run: npm run lint
       - run: npm run typecheck
       - run: npm test

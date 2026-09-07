@@ -4,14 +4,30 @@ export interface ArchitectureNode {
   type?: 'service' | 'database' | 'client' | 'gateway' | 'queue';
 }
 
+export type ProjectVisibility = 'public' | 'private';
+
+export interface ProjectLinks {
+  repo?: string;
+  demo?: string;
+}
+
 export interface Project {
   id: string;
   name: string;
+  /** Who the work was for: "Personal", "Mereb Tech", "unvrs.ai". */
+  org: string;
   role: string;
+  period: string;
+  /** Private work gets described but never linked. */
+  visibility: ProjectVisibility;
   stack: string[];
-  latency: string;
   description: string;
-  architecture: {
+  /** Concrete, verifiable notes - replaces the invented latency figures. */
+  highlights?: string[];
+  links?: ProjectLinks;
+  /** Optional screenshot; falls back to the architecture diagram. */
+  image?: string;
+  architecture?: {
     nodes: ArchitectureNode[];
     flow: string;
   };
