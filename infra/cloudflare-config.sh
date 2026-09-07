@@ -24,6 +24,8 @@
 #   Zone / Zone Settings  / Edit
 #   Zone / Cache Purge    / Purge      (only for --purge)
 #   Zone / DNS            / Edit       (only for --dns)
+#   Zone / Single Redirect/ Edit       (optional; upgrades the www 307 to an
+#                                       edge 301 - see the --dns block)
 # Create at: dash.cloudflare.com -> My Profile -> API Tokens -> Create Token
 # ---------------------------------------------------------------------------
 set -euo pipefail
@@ -293,7 +295,13 @@ if [[ $DNS -eq 1 ]]; then
     echo "  · CNAME already exists, leaving it alone"
   fi
 
-  # 301 www -> apex, preserving path and query
+  # A true 301 at Cloudflare's edge, so www never reaches the origin. This uses
+  # the http_request_dynamic_redirect phase, which needs its own permission
+  # group (Zone / Single Redirect / Edit) - Transform Rules / Edit is NOT enough.
+  #
+  # Non-fatal on purpose: the CNAME above is the part that matters. With it in
+  # place Vercel already answers www with a 307 to the apex, so the site works
+  # either way; this rule only upgrades that to an edge 301.
   R="$(cf PUT "/zones/$ZONE_ID/rulesets/phases/http_request_dynamic_redirect/entrypoint" '{
     "rules": [
       {
@@ -310,8 +318,13 @@ if [[ $DNS -eq 1 ]]; then
       }
     ]
   }')"
-  check "$R" "www redirect rule"
-  echo "  ✓ 301 redirect rule active"
+  if [[ "$(jq -r '.success' <<<"$R")" == "true" ]]; then
+    echo "  ✓ edge 301 redirect rule active"
+  else
+    echo "  · edge 301 rule skipped: $(jq -r '.errors[0].message // "unknown"' <<<"$R")"
+    echo "    Add 'Zone / Single Redirect / Edit' to the token to enable it."
+    echo "    Not fatal - Vercel already 307s www to the apex via the CNAME above."
+  fi
 fi
 
 if [[ $PURGE -eq 1 ]]; then
