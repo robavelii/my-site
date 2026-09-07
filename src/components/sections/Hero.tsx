@@ -22,8 +22,8 @@ export const Hero: React.FC = () => {
             <img
               src="/avatar.jpg"
               alt="Robel Fekadu"
-              width={256}
-              height={256}
+              width={384}
+              height={384}
               fetchPriority="high"
               decoding="async"
               className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
