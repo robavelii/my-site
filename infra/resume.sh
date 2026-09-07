@@ -28,6 +28,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 BLOB_PATHNAME='resume.pdf'
 LIVE_URL='https://robelfekadu.com/resume.pdf'
+# Host is derived from the blob store id; stable for the life of the store.
+BLOB_BASE='https://veff5g4br0bt2hom.public.blob.vercel-storage.com'
 CACHE_SECONDS=300
 
 command -v vercel >/dev/null || { echo "vercel CLI not found: npm i -g vercel" >&2; exit 1; }
@@ -46,6 +48,18 @@ blob_status() {
 
 if [[ "${1:-}" == "--status" ]]; then
   blob_status
+  exit 0
+fi
+
+# One-off tidy-up: delete any resume-<random>.pdf left by an upload that got a
+# random suffix. Only the fixed 'resume.pdf' pathname is ever served.
+if [[ "${1:-}" == "--prune" ]]; then
+  echo "→ objects in the store"
+  vercel blob list --non-interactive 2>&1 | grep -oE 'resume[^ ]*\.pdf' | sort -u | sed 's/^/  /'
+  echo
+  echo "To remove a stray suffixed copy:"
+  echo "  vercel blob del <its-url-or-pathname>"
+  echo "Keep only: $BLOB_PATHNAME"
   exit 0
 fi
 
@@ -91,15 +105,24 @@ fi
 echo "  ✓"
 
 echo "→ uploading to the blob store as '$BLOB_PATHNAME'"
+# Boolean flags MUST use --flag=value. Passing the value as a separate
+# argument sets the flag true and leaves the value as a stray positional -
+# which is how the first upload ended up at resume-<random>.pdf despite
+# asking for no suffix. A changing URL breaks the whole point of the rewrite.
 vercel blob put "$PDF" \
   --pathname "$BLOB_PATHNAME" \
-  --access public \
-  --add-random-suffix false \
-  --allow-overwrite true \
-  --content-type application/pdf \
-  --cache-control-max-age "$CACHE_SECONDS" \
+  --access=public \
+  --add-random-suffix=false \
+  --allow-overwrite=true \
+  --content-type=application/pdf \
+  --cache-control-max-age="$CACHE_SECONDS" \
   --non-interactive
 
+echo
+echo "→ the stable blob URL should be:"
+echo "     $BLOB_BASE/$BLOB_PATHNAME"
+echo "   If the upload above printed a different filename (with a random"
+echo "   suffix), the rewrite in vercel.json will not match it."
 echo
 echo "→ verifying the live URL (may take up to ${CACHE_SECONDS}s to flush)"
 sleep 3
