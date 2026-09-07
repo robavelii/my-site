@@ -120,7 +120,7 @@ read -r -d '' CACHE_RULES <<'JSON' || true
       }
     },
     {
-      "description": "Resume - short TTL, it is updated out of band",
+      "description": "Resume - short TTL so a redeployed PDF goes live quickly",
       "expression": "(http.request.uri.path eq \"/resume.pdf\")",
       "action": "set_cache_settings",
       "action_parameters": {

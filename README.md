@@ -111,8 +111,7 @@ vercel --prod
 1. **Images:** `public/avatar.jpg` (256px square, shown in the hero) and
    `public/og-card.jpg` (1200x630 social card, regenerate with
    `./infra/build-og-card.sh`). `public/robel-fekadu.jpg` is the full-size source.
-2. **Résumé:** `./infra/resume.sh path/to/new.pdf` publishes a new PDF with no
-   rebuild and no redeploy — see [Updating the résumé](#updating-the-résumé).
+2. **Résumé:** replace `public/resume.pdf` — see [Updating the résumé](#updating-the-résumé)
 3. **Email:** Change `CONTACT_EMAIL` in `src/data/constants.ts` - it is the
    single source for the footer, the contact card and both CTAs
 4. **Projects:** Edit `src/data/constants.ts` to add/modify projects
@@ -134,29 +133,28 @@ import { Certifications } from './src/components/sections/Certifications';
 
 ## 📄 Updating the résumé
 
+Replace `public/resume.pdf` and push. Vercel redeploys automatically, and
+Cloudflare caches that path for only 5 minutes, so the new file is live within
+about a minute of the deploy finishing.
+
 ```bash
-./infra/resume.sh ~/Documents/personal/Resume/Robel-Fekadu-Resume.pdf   # publish
-./infra/resume.sh --status                                              # what's live
+cp ~/Documents/personal/Resume/Robel-Fekadu-Resume.pdf public/resume.pdf
+git add public/resume.pdf && git commit -m "chore: update résumé" && git push
 ```
 
-The PDF lives in a Vercel Blob store and `vercel.json` rewrites `/resume.pdf` to
-it. A rewrite *proxies* rather than redirects, so the browser still sees a
-same-origin `/resume.pdf` — which matters, because the `<a download>` attribute is
-ignored cross-origin and the CSP is scoped to `'self'`. Uploading overwrites the
-same pathname, so the public URL never changes and nothing is rebuilt; the
-cache-control is 5 minutes, so a new version is live within that.
+Or drag the file onto `public/resume.pdf` in the GitHub web UI, which triggers
+the same deploy without touching a terminal.
 
-The script refuses anything that isn't a genuine, complete PDF — a broken résumé
-link is worse than a stale one.
+**Why not external storage?** A Vercel Blob store plus a `/resume.pdf` rewrite
+would avoid the rebuild entirely, but it costs a second place the résumé lives,
+an OIDC configuration, and a URL that must never change — for a file that
+changes a few times a year and already goes live in about a minute. The
+committed file is also versioned in git, which the blob is not.
 
-`public/resume.pdf` stays committed as a fallback: remove the rewrite and the
-file is still there, so `/resume.pdf` keeps working either way.
-
-**One-time setup** (see the header of `infra/resume.sh`): create a Blob store in
-*Vercel dashboard → Storage → Create Database → Blob*, connect it to the project,
-then run `vercel link` once from this directory. Until that exists the résumé is
-served from the committed file, and updating it means editing that file and
-letting Vercel redeploy.
+**If a cached copy is being served after a deploy**, the TTL from a previous
+cache rule can still be in force — changing a TTL does not retroactively expire
+what is already cached. Purge that one URL in *Cloudflare → Caching →
+Configuration → Purge Cache → Custom Purge*.
 
 ## 🔧 Configuration
 
