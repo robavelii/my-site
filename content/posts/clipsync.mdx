@@ -7,11 +7,26 @@ project: clipsync
 draft: true
 ---
 
-On 23 September, ClipSync went from an empty repository to a working service in 49 commits: a protocol, the crypto, a Cloudflare Worker, the sync room, a desktop agent, a web app and a tray panel, live on clip.rfh.et by the end of the day.
+import { ServerView } from '@/blog/explorables/ServerView';
+
+ClipSync copies text, screenshots and files from one of your machines to the others. Copy on the laptop, paste on the phone. The server in the middle relays every clip and stores your history, and it can’t read a word of it.
+
+<Figure
+  wide
+  caption="ClipSync’s real envelope format, sealed with AES-GCM-256 in your browser. Edit the text, then play the server and forge the header."
+>
+  <ServerView />
+</Figure>
+
+## Day one
+
+On 23 September the repository went from empty to a working service in 49 commits: a wire protocol, the crypto, a Cloudflare Worker, a sync room per account, a desktop agent, a web app and a tray panel, live on clip.rfh.et that night.
+
+The plan had encryption as phase eight. It shipped in v0.1 instead, and that one decision shaped everything after it.<Sidenote>Search is the obvious cost. The server can’t index what it can’t read, so history search runs on your device.</Sidenote>
 
 ## What the server sees
 
-Every clip is sealed on the device that copied it. The server stores and relays an envelope it can read the outside of, but not the inside.
+Every clip is sealed on the device that copied it, as `v2.<header>.<iv>.<ciphertext>`. The header says which device copied it, when, and what type it is. The server can read that, because it needs it to route the clip. It can’t change it: the header goes into AES-GCM as associated data, so one altered byte and decryption fails like a wrong key.
 
 ```ts title="packages/crypto/src/index.ts"
 const [encKey, dedupeKey] = await Promise.all([
@@ -32,6 +47,14 @@ const [encKey, dedupeKey] = await Promise.all([
 ]);
 ```
 
+Next to each clip sits a dedupe tag, so a device doesn’t send the same clip twice. It’s an HMAC under a key derived from your vault key, not a plain hash: whoever holds the database can’t hash a guess and compare.
+
 ## The key ladder
 
-Your passphrase never encrypts a clip directly.
+Your passphrase never encrypts a clip. It runs through PBKDF2-SHA256 at 600,000 rounds to make a master key, and HKDF splits that into a key-encryption key and a proof for signing in. The key that actually seals clips is 32 random bytes, wrapped by the first of those.
+
+So changing your passphrase re-wraps 32 bytes. Nothing in your history gets re-encrypted.
+
+## The 144 ms trip
+
+A copy goes from the clipboard event, through a 100 ms pause for the clipboard to settle, into an envelope, and up to the Worker. The Worker stores it in D1 first and only then asks the account’s Durable Object to fan it out, because a clip should never be announced before it exists.<Sidenote>Measured between two agents on one machine against a local Worker: a median of 144 ms, against 1,088 ms when the agents polled. Over the internet it will be slower.</Sidenote>
