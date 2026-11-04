@@ -214,6 +214,7 @@
 }
 
 .post-body a {
+  text-decoration-line: underline;
   text-decoration-color: var(--color-muted);
   text-underline-offset: 0.2em;
   transition: text-decoration-color var(--dur-short) var(--ease-out);
@@ -226,6 +227,15 @@
 .post-body ul,
 .post-body ol {
   padding-left: var(--space-lg);
+  list-style: disc;
+}
+
+.post-body ol {
+  list-style: decimal;
+}
+
+.post-body li::marker {
+  color: var(--color-muted);
 }
 
 .post-body li + li {
