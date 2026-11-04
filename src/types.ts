@@ -14,7 +14,7 @@ export interface ProjectLinks {
 export interface Project {
   id: string;
   name: string;
-  /** Who the work was for: "Personal", "Mereb Tech", "unvrs.ai". */
+  /** Who the work was for: "Personal", "Lyfe", "UNVRS", "Mereb Tech". */
   org: string;
   role: string;
   period: string;

@@ -46,29 +46,115 @@ export const SOCIAL = {
 export const CONTACT_EMAIL = 'contact@robelfekadu.com';
 
 export const PROJECTS: Project[] = [
-  // ---------------------------------------------------------------------------
-  // Open source - every one of these is a real, browsable repository.
-  // ---------------------------------------------------------------------------
+  // Newest first. Public work links to its repository; private work is
+  // described but never linked.
   {
-    id: 'rivet',
-    name: 'Rivet',
+    id: 'clipsync',
+    name: 'ClipSync',
     org: 'Personal',
     role: 'Author',
     period: '2026',
     visibility: 'public',
-    stack: ['NestJS', 'TypeScript', 'PostgreSQL', 'Redis'],
+    stack: ['TypeScript', 'Cloudflare Workers', 'Durable Objects', 'D1', 'Tauri'],
     description:
-      'Multi-tenant workflow automation platform in the same space as Zapier, n8n and Make, written as an open-source reference for enterprise NestJS backend architecture.',
-    highlights: ['Multi-tenant by design', 'Open source', 'Work in progress'],
-    links: { repo: 'https://github.com/robavelii/rivet' },
+      'End-to-end encrypted clipboard sync across your own devices. Copy on one machine, paste on another; the server relays and stores ciphertext only.',
+    highlights: [
+      'AES-GCM-256 under a per-account vault key',
+      'Linux, macOS and Windows agents, plus a phone web app',
+      'Runs on Cloudflare, or self-hosted from the same binary',
+      'Open source under AGPL-3.0',
+    ],
+    links: {
+      repo: 'https://github.com/robavelii/clipboard-worker',
+      demo: 'https://clip.rfh.et',
+    },
     architecture: {
-      flow: 'Event-driven workflow engine',
+      flow: 'Copy, seal, relay, paste',
       nodes: [
-        { name: 'API', details: 'NestJS REST + auth', type: 'gateway' },
-        { name: 'Scheduler', details: 'Trigger evaluation', type: 'service' },
-        { name: 'Queue', details: 'Redis-backed jobs', type: 'queue' },
-        { name: 'Runner', details: 'Step execution', type: 'service' },
-        { name: 'Postgres', details: 'Tenant-scoped state', type: 'database' },
+        { name: 'Agent', details: 'Seals on copy', type: 'client' },
+        { name: 'API', details: 'Hono on Workers', type: 'gateway' },
+        { name: 'D1', details: 'Ciphertext history', type: 'database' },
+        { name: 'Sync room', details: 'Durable Object fan-out', type: 'service' },
+        { name: 'Devices', details: 'Decrypt and paste', type: 'client' },
+      ],
+    },
+  },
+  {
+    id: 'spectwin',
+    name: 'SpecTwin',
+    org: 'Personal',
+    role: 'Author',
+    period: '2026',
+    visibility: 'public',
+    stack: ['TypeScript', 'NestJS', 'Fastify', 'Next.js', 'PostgreSQL'],
+    description:
+      'Import an OpenAPI contract and get a hosted, stateful sandbox of that API. Scenarios are versioned JSON with a seed, a controlled clock, idempotency rules and injected failures, so a test can replay "three 429s, then success" the same way every time.',
+    highlights: [
+      'Scenarios are drafts until approved',
+      'Seeded state and a controlled clock per session',
+      'Fault injection and idempotency replay',
+    ],
+    links: { repo: 'https://github.com/robavelii/api-sandbox' },
+    architecture: {
+      flow: 'Contract in, sandbox out',
+      nodes: [
+        { name: 'Dashboard', details: 'Next.js', type: 'client' },
+        { name: 'API', details: 'NestJS on Fastify', type: 'gateway' },
+        { name: 'Engine', details: 'Contract compiler', type: 'service' },
+        { name: 'Postgres', details: 'Sessions and state', type: 'database' },
+      ],
+    },
+  },
+  {
+    id: 'lyfe-uk',
+    name: 'Lyfe UK Platform',
+    org: 'Lyfe',
+    role: 'Senior Software Engineer',
+    period: '2026',
+    visibility: 'private',
+    stack: ['Python', 'FastAPI', 'PostgreSQL', 'Next.js', 'AWS Cognito'],
+    description:
+      'The platform behind at-home blood testing in the UK: a FastAPI backend that receives lab results over HL7 and turns them into structured biomarkers, the consumer storefront, and the staff back office.',
+    highlights: [
+      'HL7 lab results into structured biomarkers',
+      'Staff back office, including data-subject requests',
+      'End-to-end suite gating every deploy',
+    ],
+    architecture: {
+      flow: 'Order, test, result',
+      nodes: [
+        { name: 'Storefront', details: 'Next.js', type: 'client' },
+        { name: 'Back office', details: 'Staff admin', type: 'client' },
+        { name: 'API', details: 'FastAPI', type: 'gateway' },
+        { name: 'Lab link', details: 'HL7 results', type: 'service' },
+        { name: 'Postgres', details: 'Orders and results', type: 'database' },
+      ],
+    },
+  },
+  {
+    id: 'unvrs',
+    name: 'UNVRS Platform',
+    org: 'UNVRS',
+    role: 'Lead Engineer',
+    period: '2026',
+    visibility: 'private',
+    stack: ['Python', 'AWS Lambda', 'DynamoDB', 'FastAPI', 'TypeScript'],
+    description:
+      'AI that checks a blood sample before it reaches the lab: a serverless AWS backend, the image-inference service for sample quality, a QC pipeline that scores model output against labelled sets, and the company site.',
+    highlights: [
+      'Serverless, event-driven backend',
+      'Image inference for sample quality',
+      'QC evaluation against labelled test sets',
+      'Company site on S3 and CloudFront, deployed with SST',
+    ],
+    architecture: {
+      flow: 'Capture, infer, review',
+      nodes: [
+        { name: 'Capture', details: 'Scanning app', type: 'client' },
+        { name: 'API', details: 'API Gateway + Lambda', type: 'gateway' },
+        { name: 'Inference', details: 'Sample-quality models', type: 'service' },
+        { name: 'Store', details: 'DynamoDB + S3', type: 'database' },
+        { name: 'QC', details: 'Evaluation pipeline', type: 'service' },
       ],
     },
   },
@@ -96,6 +182,74 @@ export const PROJECTS: Project[] = [
     },
   },
   {
+    id: 'rivet',
+    name: 'Rivet',
+    org: 'Personal',
+    role: 'Author',
+    period: '2026',
+    visibility: 'public',
+    stack: ['NestJS', 'TypeScript', 'PostgreSQL', 'Redis'],
+    description:
+      'Multi-tenant workflow automation platform in the same space as Zapier, n8n and Make, written as an open-source reference for enterprise NestJS backend architecture.',
+    highlights: ['Multi-tenant by design', 'Open source', 'Work in progress'],
+    links: { repo: 'https://github.com/robavelii/rivet' },
+    architecture: {
+      flow: 'Event-driven workflow engine',
+      nodes: [
+        { name: 'API', details: 'NestJS REST + auth', type: 'gateway' },
+        { name: 'Scheduler', details: 'Trigger evaluation', type: 'service' },
+        { name: 'Queue', details: 'Redis-backed jobs', type: 'queue' },
+        { name: 'Runner', details: 'Step execution', type: 'service' },
+        { name: 'Postgres', details: 'Tenant-scoped state', type: 'database' },
+      ],
+    },
+  },
+  {
+    id: 'medassist-ai',
+    name: 'MedAssist AI',
+    org: 'Personal',
+    role: 'Author',
+    period: '2026',
+    visibility: 'public',
+    stack: ['Python', 'FastAPI', 'LiteLLM', 'PostgreSQL'],
+    description:
+      'Clinical decision support for healthcare professionals: triage, medication, lab and radiology modules behind one chat, with prompt-injection guards, a response cache and per-endpoint cost tracking.',
+    highlights: [
+      '10 clinical modules',
+      'Prompt-injection guards',
+      'Response cache with cost tracking',
+    ],
+    links: { repo: 'https://github.com/robavelii/medassist-ai' },
+  },
+  {
+    id: 'clinical-platform',
+    name: 'Clinical Platform',
+    org: 'Mereb Tech',
+    role: 'Maintainer & Platform Engineer',
+    period: '2025 - 2026',
+    visibility: 'private',
+    stack: ['Java', 'Python', 'JavaScript', 'Docker'],
+    description:
+      "Maintained and extended a hospital's clinical platform: shipping payments and billing, running data migrations, building lab and imaging interfaces, and owning deployment and infrastructure across the stack.",
+    highlights: [
+      'Payments and billing features',
+      'Data migrations',
+      'Imaging and lab-machine interfaces',
+      'Deployment and infrastructure ownership',
+    ],
+    architecture: {
+      flow: 'Clinical workflow platform',
+      nodes: [
+        { name: 'Clinician', details: 'Web front end', type: 'client' },
+        { name: 'Records', details: 'Patient records', type: 'service' },
+        { name: 'Lab', details: 'Lab information', type: 'service' },
+        { name: 'PACS', details: 'Imaging', type: 'service' },
+        { name: 'Billing', details: 'Payments', type: 'service' },
+        { name: 'Deploy', details: 'Docker + on-prem', type: 'service' },
+      ],
+    },
+  },
+  {
     id: 'hellgate',
     name: 'Hellgate',
     org: 'Personal',
@@ -115,99 +269,6 @@ export const PROJECTS: Project[] = [
         { name: 'Auth', details: 'Token issue/verify', type: 'service' },
         { name: 'Redis', details: 'Session + limits', type: 'database' },
         { name: 'Services', details: 'Any stack', type: 'service' },
-      ],
-    },
-  },
-  {
-    id: 'api-showcase',
-    name: 'FastAPI Showcase',
-    org: 'Personal',
-    role: 'Author',
-    period: '2026',
-    visibility: 'public',
-    stack: ['Python', 'FastAPI', 'Docker', 'Monorepo'],
-    description:
-      'Monorepo of five fully documented FastAPI applications, each demonstrating a different slice of modern backend practice.',
-    highlights: ['5 applications', 'Documented end to end'],
-    links: { repo: 'https://github.com/robavelii/api-showcase' },
-  },
-  {
-    id: 'nest-ecommerce',
-    name: 'NestJS Commerce API',
-    org: 'Personal',
-    role: 'Author',
-    period: '2025',
-    visibility: 'public',
-    stack: ['NestJS', 'TypeORM', 'PostgreSQL'],
-    description:
-      'Full-featured e-commerce REST API built to mirror the architectural patterns and standards of a production commerce backend.',
-    highlights: ['Production-shaped architecture', 'Open source'],
-    links: { repo: 'https://github.com/robavelii/nest-ecommerce' },
-  },
-
-  // ---------------------------------------------------------------------------
-  // Client and product work - private repositories, described but not linked.
-  // NOTE: wording here needs Robel's sign-off before this ships.
-  // ---------------------------------------------------------------------------
-  {
-    id: 'unvrs-platform',
-    name: 'unvrs.ai Platform Backend',
-    org: 'unvrs.ai',
-    role: 'Backend Lead',
-    period: '2026',
-    visibility: 'private',
-    stack: ['Python', 'FastAPI', 'PostgreSQL', 'ML Pipelines'],
-    description:
-      'Backend services for an AI-driven visual inspection platform: ingestion, model-serving endpoints and the APIs the operator tooling runs on.',
-    highlights: ['Primary backend author', 'Model serving + data ingestion'],
-    architecture: {
-      flow: 'Capture, infer, review',
-      nodes: [
-        { name: 'Capture', details: 'Scanning clients', type: 'client' },
-        { name: 'Ingest API', details: 'FastAPI intake', type: 'gateway' },
-        { name: 'Inference', details: 'Model serving', type: 'service' },
-        { name: 'Store', details: 'Results + audit', type: 'database' },
-        { name: 'Dashboard', details: 'Operator review', type: 'service' },
-      ],
-    },
-  },
-  {
-    id: 'unvrs-ops',
-    name: 'unvrs.ai Operations Tooling',
-    org: 'unvrs.ai',
-    role: 'Sole Author',
-    period: '2026',
-    visibility: 'private',
-    stack: ['TypeScript', 'React', 'Python'],
-    description:
-      'Operator dashboard plus the QC evaluation pipeline that scores model output against labelled test sets and reports regressions between runs.',
-    highlights: ['Sole author on both repos', 'Automated QC evaluation'],
-  },
-  {
-    id: 'leanhealth',
-    name: 'LeanHealth Clinical Platform',
-    org: 'Mereb Tech',
-    role: 'Maintainer & Platform Engineer',
-    period: '2025 - 2026',
-    visibility: 'private',
-    stack: ['Java', 'Python', 'JavaScript', 'Odoo', 'Docker'],
-    description:
-      'Maintained and extended a clinical platform built on Bahmni, OpenELIS and Odoo - shipping new features including payments and billing, running data migrations, and owning deployment and infrastructure across the stack.',
-    highlights: [
-      'Payments and billing features',
-      'Data migrations into the clinical stack',
-      'Deployment and infrastructure ownership',
-      'PACS imaging and lab-machine interfaces',
-    ],
-    architecture: {
-      flow: 'Clinical workflow platform',
-      nodes: [
-        { name: 'Clinician', details: 'Web front end', type: 'client' },
-        { name: 'Bahmni', details: 'EMR core', type: 'service' },
-        { name: 'OpenELIS', details: 'Lab information', type: 'service' },
-        { name: 'PACS', details: 'Imaging (dcm4chee)', type: 'service' },
-        { name: 'Odoo', details: 'Payments + billing', type: 'service' },
-        { name: 'Deploy', details: 'Docker + on-prem', type: 'service' },
       ],
     },
   },
