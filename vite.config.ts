@@ -34,7 +34,7 @@ export default defineConfig({
             {
               // Both palettes ship as CSS variables on each token; blog.css
               // picks one per theme, so there is no highlighter at runtime.
-              themes: { light: 'github-light', dark: 'github-dark-dimmed' },
+              themes: { light: 'github-light-high-contrast', dark: 'github-dark' },
               defaultColor: false,
               transformers: [shikiCodeTitle()],
             },
@@ -46,6 +46,10 @@ export default defineConfig({
     },
     react({ include: /\.(mdx|js|jsx|ts|tsx)$/ }),
   ],
+  build: {
+    // scripts/prerender.mjs reads this to link the blog's CSS from each page.
+    manifest: true,
+  },
   test: {
     globals: true,
     environment: 'jsdom',

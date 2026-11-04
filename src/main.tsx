@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import { matchRoute } from './routes';
 import './index.css';
-import './blog/blog.css';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

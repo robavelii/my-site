@@ -72,6 +72,7 @@ function withHead(template, head) {
   html = html.replace(/(<meta property="og:image:alt" content=")[^"]*(" \/>)/, `$1${title}$2`);
 
   const extra = [
+    cssLinks,
     `<link rel="alternate" type="application/rss+xml" title="Robel Fekadu: build notes" href="${SITE_URL}/blog/rss.xml" />`,
     head.publishedTime &&
       `<meta property="article:published_time" content="${head.publishedTime}" />`,
@@ -80,6 +81,13 @@ function withHead(template, head) {
     .join('\n    ');
   return html.replace('</head>', `    ${extra}\n  </head>`);
 }
+
+// The blog's stylesheet ships as a chunk of the lazily loaded blog client. Link
+// it from the head so a prerendered page is styled before any script runs.
+const manifest = JSON.parse(await readFile(resolve(dist, '.vite/manifest.json'), 'utf8'));
+const blogCss = manifest['src/blog/client.tsx']?.css ?? [];
+if (!blogCss.length) throw new Error('prerender: no CSS found for src/blog/client.tsx');
+const cssLinks = blogCss.map((file) => `<link rel="stylesheet" href="/${file}" />`).join('\n    ');
 
 const template = await readFile(resolve(dist, 'index.html'), 'utf8');
 if (!template.includes('<div id="root"></div>'))
@@ -170,7 +178,7 @@ await write(
   resolve(dist, 'blog/og/index.png'),
   await card({
     title: 'Build notes',
-    summary: 'Long-form write-ups of things I built, what broke, and what I would keep.',
+    summary: 'What I built, how it works, what broke, what I’d keep.',
     footer: 'Robel Fekadu',
   })
 );
@@ -206,7 +214,7 @@ await write(
     <title>Robel Fekadu: build notes</title>
     <link>${SITE_URL}/blog</link>
     <atom:link href="${SITE_URL}/blog/rss.xml" rel="self" type="application/rss+xml" />
-    <description>Long-form write-ups of things I built, what broke, and what I would keep.</description>
+    <description>What I built, how it works, what broke, what I’d keep.</description>
     <language>en</language>
 ${items}
   </channel>
