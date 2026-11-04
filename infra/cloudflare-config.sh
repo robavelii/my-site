@@ -138,6 +138,16 @@ read -r -d '' CACHE_RULES <<'JSON' || true
         "edge_ttl":    { "mode": "override_origin", "default": 86400 },
         "browser_ttl": { "mode": "override_origin", "default": 3600 }
       }
+    },
+    {
+      "description": "Blog feed and share cards - unhashed, same TTL as root static files",
+      "expression": "(http.request.uri.path eq \"/blog/rss.xml\") or (starts_with(http.request.uri.path, \"/blog/og/\"))",
+      "action": "set_cache_settings",
+      "action_parameters": {
+        "cache": true,
+        "edge_ttl":    { "mode": "override_origin", "default": 86400 },
+        "browser_ttl": { "mode": "override_origin", "default": 3600 }
+      }
     }
   ]
 }

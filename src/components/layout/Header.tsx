@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { Laptop, Moon, Search, Sun } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { SECTIONS } from '../../data/constants';
@@ -9,21 +9,31 @@ const THEME_OPTIONS = [
   { value: 'system', label: 'System', icon: Laptop },
 ] as const;
 
+/** Which page the header sits on: section links are in-page only at home. */
+export type HeaderPage = 'home' | 'blog';
+
 interface HeaderProps {
+  page: HeaderPage;
   onOpenPalette: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onOpenPalette }) => {
+const noSubscribe = () => () => {};
+
+// userAgentData is the non-deprecated replacement for navigator.platform.
+const readIsMac = () => {
+  const ua = navigator as Navigator & { userAgentData?: { platform?: string } };
+  return /mac/i.test(ua.userAgentData?.platform ?? navigator.userAgent);
+};
+
+export const Header: React.FC<HeaderProps> = ({ page, onOpenPalette }) => {
   const { theme, setTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('');
   const menuRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  // userAgentData is the non-deprecated replacement for navigator.platform.
-  const [isMac] = useState(() => {
-    const ua = navigator as Navigator & { userAgentData?: { platform?: string } };
-    return /mac/i.test(ua.userAgentData?.platform ?? navigator.userAgent);
-  });
+  // Blog pages are prerendered and the server has no navigator, so it renders
+  // "Ctrl" and the browser corrects it after hydration.
+  const isMac = useSyncExternalStore(noSubscribe, readIsMac, () => false);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -48,7 +58,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenPalette }) => {
   useEffect(() => {
     // Degrade to no highlight rather than throwing during mount, which would
     // take the whole tree down with it.
-    if (typeof IntersectionObserver === 'undefined') return;
+    if (page !== 'home' || typeof IntersectionObserver === 'undefined') return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -64,7 +74,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenPalette }) => {
       if (el) observer.observe(el);
     });
     return () => observer.disconnect();
-  }, []);
+  }, [page]);
 
   return (
     <nav
@@ -72,7 +82,8 @@ export const Header: React.FC<HeaderProps> = ({ onOpenPalette }) => {
       className="fixed top-0 w-full z-50 border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md h-14 flex items-center justify-between gap-4 px-4 md:px-6 lg:px-8 transition-colors"
     >
       <a
-        href="#main-content"
+        href={page === 'home' ? '#main-content' : '/'}
+        aria-label={page === 'home' ? undefined : 'Robel Fekadu, home'}
         className="font-mono text-sm font-medium text-zinc-900 dark:text-zinc-100 shrink-0"
       >
         robel<span className="text-emerald-700 dark:text-emerald-400">.</span>
@@ -82,7 +93,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenPalette }) => {
         {SECTIONS.map(({ id, label }) => (
           <li key={id}>
             <a
-              href={`#${id}`}
+              href={page === 'home' ? `#${id}` : `/#${id}`}
               aria-current={activeSection === id ? 'true' : undefined}
               className={`block rounded px-3 py-1.5 font-mono text-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
                 activeSection === id
@@ -94,6 +105,19 @@ export const Header: React.FC<HeaderProps> = ({ onOpenPalette }) => {
             </a>
           </li>
         ))}
+        <li>
+          <a
+            href="/blog"
+            aria-current={page === 'blog' ? 'page' : undefined}
+            className={`block rounded px-3 py-1.5 font-mono text-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
+              page === 'blog'
+                ? 'text-zinc-900 dark:text-zinc-100 bg-zinc-100 dark:bg-zinc-800'
+                : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'
+            }`}
+          >
+            Blog
+          </a>
+        </li>
       </ul>
 
       <div className="flex items-center gap-2 shrink-0">
