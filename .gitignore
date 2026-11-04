@@ -31,3 +31,6 @@ cloudflare-token.txt
 *.token
 .env*.local
 .env*
+
+# Cloudflare config backups written by infra/cloudflare-config.sh --apply
+infra/.cf-backups/
