@@ -4,10 +4,11 @@ summary: How ClipSync moves what you copy between your own devices while the ser
 date: 2026-11-04
 tags: [encryption, cloudflare, typescript]
 project: clipsync
-draft: true
 ---
 
 import { ServerView } from '@/blog/explorables/ServerView';
+import { KeyLadder } from '@/blog/explorables/KeyLadder';
+import { EchoLoop } from '@/blog/explorables/EchoLoop';
 
 I work across a laptop, a desktop and a phone, and the most annoying part of that is moving small things between them. A link I found on the laptop that I want on the phone. A command from the desktop I need on the laptop. I was emailing myself, messaging myself, pasting into notes apps, and I couldn’t find a tool I could just download that did the obvious thing: copy here, paste there.
 
@@ -57,7 +58,9 @@ The honest list of what the server does see: your salt, your wrapped key, hashes
 
 Your passphrase never encrypts a clip. It goes through PBKDF2-SHA256 at 600,000 rounds to make a master key, and HKDF splits that into two things: a key that wraps other keys, and a proof that lets you sign in without the server ever seeing the passphrase. The key that actually seals clips is 32 random bytes, wrapped by the first of those.
 
-{/* Explorable 2: the key ladder. Real PBKDF2 timing on the reader's device; "change passphrase" re-wraps only the 32 bytes. */}
+<Figure caption="The same ladder as ClipSync, run on your device. Derive once, change the passphrase, derive again: only the marked rows move.">
+  <KeyLadder />
+</Figure>
 
 That indirection pays for itself the first time you change your passphrase. ClipSync re-wraps 32 bytes and nothing in your history gets re-encrypted.
 
@@ -67,11 +70,13 @@ A copy starts as a clipboard event. The agent waits 100 ms for the clipboard to 
 
 Then comes the bug every clipboard sync tool meets. When the phone writes the incoming clip to its clipboard, that write looks exactly like you copying something. Without care, two devices pass one clip back and forth forever.
 
-{/* Explorable 3: the echo loop. Two clipboards ping-pong; switch on the two guards and it stops. */}
+<Figure wide caption="A model of the echo loop. Try each guard on its own, then both.">
+  <EchoLoop />
+</Figure>
 
 ClipSync has two guards. Every event carries the device it came from, and nothing is sent back to its origin. And each agent remembers the tag of the last clip it sent or applied, so the clipboard change it causes itself is recognised and ignored. The second one does the real work; the first is there in case it ever doesn’t.
 
-## Joining without typing the passphrase twice
+## Pairing a new device
 
 Typing a long passphrase on a phone is the fastest way to make people pick a short one. So a new device can join two other ways.
 
@@ -96,7 +101,7 @@ All of it was fixed that day, and the fixes became some of the best parts of the
 
 macOS had one more trick. A clipboard write can be lost if the process that made it exits straight away: AppleScript’s file write lost 18 of 80 writes on the Apple Silicon release runner. That flaky test failed the v0.8.0 release, so v0.8.0 never shipped. The fix is to read the value back before exiting, and v0.8.1 went out the same afternoon.
 
-## Who gets to ship the next binary
+## Who ships the binary
 
 The agents update themselves, and that raised the question I took more seriously than anything else in the project: who decides what the next binary is?
 
@@ -119,6 +124,17 @@ A few honest limits, since the rest of this post is fairly pleased with itself.
 - Binaries aren’t signed or notarised yet, and the Linux tray panel is built from source.
 
 ## Try it
+
+<Figure caption="clip.rfh.et, signed out: sign in, make an account, or pair with a code from a device you already use.">
+  <img
+    src="/blog/clipsync/clip-home.jpg"
+    width="1440"
+    height="900"
+    alt="The ClipSync web app's sign-in page, with the line “Copy on one device. Paste on the next.”"
+    loading="lazy"
+    decoding="async"
+  />
+</Figure>
 
 ClipSync is live at [clip.rfh.et](https://clip.rfh.et), and the source is on [GitHub](https://github.com/robavelii/clipboard-worker) under AGPL-3.0. On Linux or macOS it’s one command:
 
