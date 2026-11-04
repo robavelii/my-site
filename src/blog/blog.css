@@ -742,3 +742,138 @@
     gap: var(--space-2xs);
   }
 }
+
+/* ------------------------------------------ explorables: key ladder, echo loop */
+
+.kl,
+.el {
+  display: grid;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+}
+
+.kl-controls {
+  display: grid;
+  gap: var(--space-md);
+  align-items: end;
+}
+
+@media (min-width: 48rem) {
+  .kl-controls {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr) auto;
+  }
+}
+
+.kl-field {
+  display: grid;
+  gap: var(--space-xs);
+}
+
+.kl-field label,
+.el-guards legend {
+  font-size: var(--text-sm);
+  font-weight: var(--display-weight);
+}
+
+.kl-input {
+  min-height: 44px;
+}
+
+.kl-range {
+  width: 100%;
+  min-height: 44px;
+  accent-color: var(--color-accent);
+}
+
+.kl-range:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.kl-ladder {
+  padding-top: var(--space-md);
+  border-top: var(--rule-hair) solid var(--color-rule);
+}
+
+.kl-ladder > div {
+  grid-template-columns: 10rem minmax(0, 1fr);
+}
+
+.kl-ladder dd {
+  font-size: var(--text-sm);
+}
+
+.el {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 48rem) {
+  .el {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  }
+}
+
+.el-guards {
+  display: grid;
+  align-content: start;
+  gap: var(--space-sm);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.el-guards label {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: flex-start;
+  min-height: 44px;
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.el-guards input {
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-top: var(--space-3xs);
+  flex-shrink: 0;
+  accent-color: var(--color-accent);
+}
+
+.el-guards input:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.el-guards .sv-button {
+  justify-self: start;
+}
+
+.el-log {
+  display: grid;
+  align-content: start;
+  gap: var(--space-sm);
+  min-height: 12rem;
+}
+
+.el-log ol {
+  margin: 0;
+  padding-left: var(--space-lg);
+  display: grid;
+  gap: var(--space-2xs);
+  font-size: var(--text-sm);
+  list-style: decimal;
+}
+
+.el-log li::marker {
+  color: var(--color-muted);
+}
+
+.el-quiet {
+  color: var(--color-accent);
+}
+
+.fig-body > img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-card);
+}
