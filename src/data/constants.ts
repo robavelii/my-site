@@ -31,9 +31,9 @@ export const SKILLS_DATA = {
 
 // Shared by the header nav and the command palette so the two can never drift.
 export const SECTIONS = [
+  { id: 'projects', label: 'Projects' },
   { id: 'services', label: 'Services' },
   { id: 'stack', label: 'Stack' },
-  { id: 'projects', label: 'Projects' },
   { id: 'contact', label: 'Contact' },
 ] as const;
 
@@ -345,11 +345,30 @@ export const SERVICES: ExtendedService[] = [
   },
 ];
 
+// Kept in step with the stack table in github.com/robavelii/robavelii.
 export const TECH_STACK: TechCategory[] = [
-  { name: 'Compute', skills: ['Node.js', 'Python', 'Go', 'NestJS', 'Django'] },
-  { name: 'Data', skills: ['PostgreSQL', 'Redis', 'ElasticSearch', 'MongoDB'] },
-  { name: 'Infra', skills: ['Docker', 'Kubernetes', 'AWS', 'Nginx', 'Linux'] },
-  { name: 'Interface', skills: ['React', 'TypeScript', 'Next.js', 'Tailwind'] },
+  { name: 'Languages', skills: ['TypeScript', 'Python', 'Kotlin', 'Java', 'Go', 'SQL'] },
+  {
+    name: 'Backend',
+    skills: [
+      'NestJS',
+      'Fastify',
+      'Hono',
+      'FastAPI',
+      'Spring Boot',
+      'GraphQL',
+      'Prisma',
+      'SQLAlchemy',
+    ],
+  },
+  { name: 'Jobs and realtime', skills: ['BullMQ', 'Celery', 'Durable Objects', 'WebSockets'] },
+  { name: 'AI', skills: ['RAG pipelines', 'pgvector', 'LangChain', 'LiteLLM'] },
+  { name: 'Frontend', skills: ['React', 'Next.js', 'Vite', 'Tailwind', 'Tauri'] },
+  { name: 'Data', skills: ['PostgreSQL', 'Redis', 'MySQL', 'SQLite and D1', 'MinIO'] },
+  {
+    name: 'Infra',
+    skills: ['Docker', 'GitHub Actions', 'Cloudflare', 'Vercel', 'AWS', 'OCI', 'OpenTelemetry'],
+  },
 ];
 
 interface TechConfig {
