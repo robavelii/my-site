@@ -50,7 +50,7 @@ export async function buildBlogPage(route: Route): Promise<BlogPage> {
       head: {
         title: 'Build notes | Robel Fekadu',
         description:
-          'Long-form write-ups by Robel Fekadu on things he built, what broke, and what he would keep.',
+          'Build notes by Robel Fekadu: what he built, how it works, what broke, what he’d keep.',
         path: '/blog',
         type: 'website',
         ogImage: '/blog/og/index.png',

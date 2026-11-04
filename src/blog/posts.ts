@@ -34,6 +34,8 @@ export interface PostModule {
 
 export interface PostMeta extends PostFrontmatter {
   slug: string;
+  /** The post's section heads, from the posts manifest. */
+  sections: string[];
 }
 
 const loaders = import.meta.glob<PostModule>('/content/posts/*.mdx');

@@ -48,6 +48,7 @@ export function postsManifest({ dir = 'content/posts' } = {}) {
           date: String(fm.date instanceof Date ? fm.date.toISOString().slice(0, 10) : fm.date),
           tags: fm.tags ?? [],
           slug: file.replace(/\.mdx$/, ''),
+          sections: [...match[2].matchAll(/^## (.+)$/gm)].map((m) => m[1].trim()),
           readingMinutes: Math.max(1, Math.round(countWords(match[2]) / WORDS_PER_MINUTE)),
         });
       }
