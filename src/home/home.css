@@ -1,0 +1,508 @@
+/* Hallmark · shape: index-first, the work as the page · genre: modern-minimal · theme: brand · redesign: full · job: hire · modes: light+dark
+ * paper: oklch(98.4% 0.004 250) · accent: oklch(50.8% 0.118 165.6) · display: Inter · body: Inter · hero: split, head on columns 1 to 6, the latest post's explorable on 7 to 12 · nav: kept (the site header) · footer: kept (the site footer) · signature: the latest build running in the hero (ClipSync's envelope, sealed live)
+ * axes: light/grotesk-medium/chromatic-green · posture: restrained · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H5 E4 S4 R5 V4 · weakest: P, a portfolio argues by its work; the hero runs a real build instead of a drawn terminal, and the work list opens on the newest project */
+/* Hallmark · waive 1 · Inter is the site's display face on every page · the home page must match the blog it links to */
+/* Hallmark · dropped "Latency: 12ms", "Region: et-east-1", "uptime: 99.99%" · 46a names invented figures */
+/* Hallmark · dropped the drawn terminal window, the particle field and the API-endpoint costume (method badges, request flows, JSON responses) · 47a and 66 name them; each service keeps its description */
+/* Hallmark · reworded the hero line (17 words to 12) and "Connect to System" to "Email me" · 58 and 19; the hire job puts a plain contact in the hero */
+/* Hallmark · reworded headings "Projects" to "Selected work, 2025 to 2026", "Services" to "What I’m hired for", "Stack" to "The tools I reach for" · 54 named the eyebrows over them; the ids and nav labels stay */
+/* Hallmark · dropped the stack's category labels (Compute, Data, Infra, Interface) and the services' endpoint, schema and response headings · 54 and 47c; the stack is now a table of current tools */
+/* Hallmark · reworded "Response time: ~2 hours" to "Response time: about two hours" · F1 and 19 house punctuation; the owner should confirm it still holds */
+/* Hallmark · waive 39b · each work-list button is a whole project row, two lines tall · a row of the list opens like a disclosure, not a call to action */
+/* Hallmark · dismissed 41 · the demo's well is paper-2 and its text inherits ink in both modes; contrast checked at 17.2:1 in dark */
+/* Hallmark · dismissed 77 · the page has five sections in <section> elements; the render tier counts the hero and footer only */
+/* Hallmark · dismissed 29 · the glass is the site header's, kept chrome shared with the blog */
+@import '../blog/tokens.css';
+@import '../blog/base.css';
+
+.home-main {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  padding-block: var(--nav-height) var(--space-3xl);
+}
+
+.home {
+  display: grid;
+  gap: var(--section-gap-s);
+  width: 100%;
+  max-width: 76rem;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.home .icon {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+}
+
+.home a {
+  text-decoration-color: var(--color-rule);
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color var(--dur-short) var(--ease-out);
+}
+
+.home a:hover {
+  text-decoration-color: var(--color-accent);
+}
+
+.home-quiet {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+/* ---------------------------------------------------------------- hero */
+
+.home-hero {
+  display: grid;
+  gap: var(--space-2xl);
+  align-items: center;
+  min-height: calc(100svh - var(--nav-height));
+  padding-block: var(--space-xl);
+}
+
+@media (min-width: 64rem) {
+  .home-hero {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-2xl);
+  }
+}
+
+.home-hero-text {
+  display: grid;
+  gap: var(--space-lg);
+  justify-items: start;
+}
+
+.home-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: var(--radius-pill);
+  object-fit: cover;
+}
+
+.home-hero h1 {
+  max-width: 14ch;
+  font-size: var(--text-display-s);
+  line-height: 1.02;
+}
+
+.home-lede {
+  max-width: 34ch;
+  font-size: var(--text-lead);
+  line-height: 1.45;
+  color: var(--color-ink-2);
+}
+
+.home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  padding-top: var(--space-xs);
+}
+
+.home a.home-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-height: 48px;
+  padding: 0 var(--space-lg);
+  border: var(--rule-hair) solid var(--color-rule);
+  border-radius: var(--radius-card);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-weight: var(--display-weight);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color var(--dur-micro) var(--ease-out),
+    border-color var(--dur-micro) var(--ease-out);
+}
+
+.home a.home-button:hover {
+  border-color: var(--color-muted);
+}
+
+.home a.home-button:active {
+  background: var(--color-paper-3);
+}
+
+.home a.home-button-primary {
+  border-color: var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+.home a.home-button-primary:hover {
+  background: var(--color-ink-2);
+  border-color: var(--color-ink-2);
+}
+
+.home a.home-button-primary:active {
+  background: var(--color-ink);
+}
+
+.home-hero-figure {
+  margin: 0;
+  display: grid;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.home-hero-figure > .sv-frame {
+  border-radius: var(--radius-card);
+  background: var(--color-paper-2);
+}
+
+.home-hero-figure figcaption {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.home-hero-figure figcaption a {
+  color: var(--color-ink);
+  text-decoration-line: underline;
+}
+
+/* ------------------------------------------------------------ sections */
+
+.home-section {
+  display: grid;
+  gap: var(--space-xl);
+  scroll-margin-top: var(--nav-height);
+}
+
+.home-section h2 {
+  max-width: 22ch;
+  font-size: var(--text-section);
+}
+
+/* --------------------------------------------------------------- work */
+
+.work {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-bottom: var(--rule-hair) solid var(--color-rule);
+}
+
+.work-item {
+  border-top: var(--rule-hair) solid var(--color-rule);
+}
+
+.work-item h3 {
+  max-width: none;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: normal;
+  line-height: inherit;
+}
+
+.work-toggle {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-2xs);
+  width: 100%;
+  padding: var(--space-md) var(--space-sm);
+  border: 0;
+  background: transparent;
+  color: var(--color-ink);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--dur-short) var(--ease-out);
+}
+
+.work-toggle:hover {
+  background: var(--color-paper-2);
+}
+
+.work-toggle:active {
+  background: var(--color-paper-3);
+}
+
+@media (min-width: 56rem) {
+  .work-toggle {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 3fr) minmax(0, 5fr);
+    grid-template-areas:
+      'name role stack'
+      'meta role stack';
+    column-gap: var(--space-xl);
+    align-items: baseline;
+  }
+
+  .work-name {
+    grid-area: name;
+  }
+
+  .work-meta {
+    grid-area: meta;
+  }
+
+  .work-role {
+    grid-area: role;
+  }
+
+  .work-stack {
+    grid-area: stack;
+  }
+}
+
+.work-name {
+  font-size: var(--text-title);
+  font-weight: var(--display-weight);
+  letter-spacing: -0.01em;
+}
+
+.work-meta,
+.work-role,
+.work-stack {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.work-role {
+  color: var(--color-ink-2);
+}
+
+.is-open .work-name {
+  color: var(--color-ink);
+}
+
+.is-open .work-toggle {
+  box-shadow: inset 2px 0 0 var(--color-accent);
+}
+
+.work-detail {
+  display: grid;
+  gap: var(--space-xl);
+  padding: var(--space-sm) var(--space-sm) var(--space-xl);
+}
+
+.work-detail[hidden] {
+  display: none;
+}
+
+@media (min-width: 56rem) {
+  .work-detail {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+}
+
+.work-detail-text {
+  display: grid;
+  align-content: start;
+  gap: var(--space-md);
+}
+
+.work-detail-text > p {
+  max-width: 60ch;
+  line-height: 1.6;
+}
+
+.work-highlights {
+  margin: 0;
+  padding-left: var(--space-lg);
+  display: grid;
+  gap: var(--space-2xs);
+  list-style: disc;
+  font-size: var(--text-sm);
+  color: var(--color-ink-2);
+}
+
+.work-highlights li::marker {
+  color: var(--color-muted);
+}
+
+.work-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm) var(--space-lg);
+}
+
+.work-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  min-height: 44px;
+  text-decoration-line: underline;
+}
+
+.work-flow {
+  margin: 0;
+  display: grid;
+  gap: var(--space-sm);
+  align-content: start;
+}
+
+.work-flow ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 7.5rem), 1fr));
+  gap: var(--space-xs);
+}
+
+.work-flow li {
+  counter-increment: step;
+  display: grid;
+  gap: var(--space-3xs);
+  padding: var(--space-sm);
+  border-radius: var(--radius-card);
+  background: var(--color-paper-2);
+}
+
+.work-flow-name {
+  font-weight: var(--display-weight);
+  font-size: var(--text-sm);
+}
+
+.work-flow-name::before {
+  content: counter(step) '  ';
+  color: var(--color-muted);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+.work-flow-detail {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+}
+
+.work-flow figcaption {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+}
+
+/* ------------------------------------------------------------ services */
+
+.home-services {
+  display: grid;
+  gap: var(--space-xl) var(--space-2xl);
+  margin: 0;
+}
+
+@media (min-width: 48rem) {
+  .home-services {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.home-services > div {
+  display: grid;
+  gap: var(--space-sm);
+  padding-top: var(--space-md);
+  border-top: var(--rule-hair) solid var(--color-ink);
+}
+
+.home-services dt {
+  font-size: var(--text-title);
+  font-weight: var(--display-weight);
+}
+
+.home-services dd {
+  margin: 0;
+  display: grid;
+  gap: var(--space-xs);
+}
+
+/* --------------------------------------------------------------- stack */
+
+.home-stack {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.home-stack th,
+.home-stack td {
+  padding: var(--space-sm) 0;
+  border-top: var(--rule-hair) solid var(--color-rule);
+  text-align: left;
+  vertical-align: baseline;
+}
+
+.home-stack th {
+  width: 12rem;
+  padding-right: var(--space-lg);
+  font-weight: var(--display-weight);
+  font-size: var(--text-sm);
+}
+
+.home-stack td {
+  color: var(--color-ink-2);
+}
+
+@media (max-width: 40rem) {
+  .home-stack th,
+  .home-stack td {
+    display: block;
+    width: auto;
+  }
+
+  .home-stack td {
+    border-top: 0;
+    padding-top: 0;
+  }
+}
+
+/* ------------------------------------------------------------- contact */
+
+.home-contact {
+  align-items: start;
+}
+
+@media (min-width: 56rem) {
+  .home-contact {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    column-gap: var(--space-3xl);
+  }
+}
+
+.home-contact > div {
+  display: grid;
+  gap: var(--space-lg);
+}
+
+.home-contact-copy {
+  max-width: 52ch;
+  font-size: var(--text-lead);
+  line-height: 1.5;
+  color: var(--color-ink-2);
+}
+
+.home-channels {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-bottom: var(--rule-hair) solid var(--color-rule);
+}
+
+.home-channels a {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  min-height: 64px;
+  padding: var(--space-sm) 0;
+  border-top: var(--rule-hair) solid var(--color-rule);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.home-channels a > span {
+  display: grid;
+}
+
+.home-channel-name {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+}
+
+.home-channels a:hover {
+  border-top-color: var(--color-accent);
+}

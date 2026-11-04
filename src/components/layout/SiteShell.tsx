@@ -53,8 +53,8 @@ export const SiteShell: React.FC<SiteShellProps> = ({
 
         <footer className="border-t border-zinc-200 dark:border-zinc-800 bg-zinc-100/50 dark:bg-zinc-900/50 mt-24">
           <div className="container mx-auto px-4 py-12">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-zinc-500 dark:text-zinc-400 font-mono">
-              <p>&copy; {new Date().getFullYear()} Robel Fekadu. System Status: Operational.</p>
+            <div className="flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-zinc-600 dark:text-zinc-400">
+              <p>&copy; {new Date().getFullYear()} Robel Fekadu</p>
               <div className="flex items-center gap-6">
                 <a
                   href="/blog/rss.xml"

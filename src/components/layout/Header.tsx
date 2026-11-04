@@ -95,7 +95,7 @@ export const Header: React.FC<HeaderProps> = ({ page, onOpenPalette }) => {
             <a
               href={page === 'home' ? `#${id}` : `/#${id}`}
               aria-current={activeSection === id ? 'true' : undefined}
-              className={`block rounded px-3 py-1.5 font-mono text-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
+              className={`block rounded px-3 py-1.5 text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
                 activeSection === id
                   ? 'text-zinc-900 dark:text-zinc-100 bg-zinc-100 dark:bg-zinc-800'
                   : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'
@@ -109,7 +109,7 @@ export const Header: React.FC<HeaderProps> = ({ page, onOpenPalette }) => {
           <a
             href="/blog"
             aria-current={page === 'blog' ? 'page' : undefined}
-            className={`block rounded px-3 py-1.5 font-mono text-xs transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
+            className={`block rounded px-3 py-1.5 text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
               page === 'blog'
                 ? 'text-zinc-900 dark:text-zinc-100 bg-zinc-100 dark:bg-zinc-800'
                 : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'

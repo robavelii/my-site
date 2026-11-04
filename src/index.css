@@ -1,46 +1,13 @@
+/* Hallmark · shape: kept · genre: modern-minimal · theme: brand · the site's global sheet: Tailwind, one overflow rule and the reduced-motion guard · v2.0.0 */
+/* Nothing on any page may scroll sideways; clip keeps sticky and fixed working. */
+html,
+body {
+  overflow-x: clip;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@layer utilities {
-  .bg-grid {
-    background-size: 40px 40px;
-    background-image:
-      linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
-  }
-
-  .dark .bg-grid {
-    background-image:
-      linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-  }
-
-  /* Custom Scrollbar */
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #a1a1aa; /* zinc-400 */
-    border: 1px solid transparent;
-    background-clip: content-box;
-    border-radius: 4px;
-  }
-  .dark ::-webkit-scrollbar-thumb {
-    background: #27272a; /* zinc-800 */
-    border: 1px solid #09090b;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #71717a;
-  }
-  .dark ::-webkit-scrollbar-thumb:hover {
-    background: #3f3f46;
-  }
-}
 
 /* Honour the OS "reduce motion" setting for everything decorative. The particle
    field opts out in JS; these are the CSS-driven ones (ping dots, blinking
