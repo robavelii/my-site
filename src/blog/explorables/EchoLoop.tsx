@@ -1,3 +1,4 @@
+import './explorables.css';
 import React, { useEffect, useRef, useState } from 'react';
 
 type Device = 'laptop' | 'phone';

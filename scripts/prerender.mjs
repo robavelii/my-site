@@ -24,7 +24,7 @@ const write = async (file, data) => {
 // --- pages -----------------------------------------------------------------
 
 /** Swaps the home page's head for the route's own, leaving everything else as built. */
-function withHead(template, head) {
+function withHead(template, head, css) {
   const url = `${SITE_URL}${head.path}`;
   const image = `${SITE_URL}${head.ogImage}`;
   const title = escapeHtml(head.title);
@@ -72,7 +72,7 @@ function withHead(template, head) {
   html = html.replace(/(<meta property="og:image:alt" content=")[^"]*(" \/>)/, `$1${title}$2`);
 
   const extra = [
-    cssLinks,
+    css,
     `<link rel="alternate" type="application/rss+xml" title="Robel Fekadu: build notes" href="${SITE_URL}/blog/rss.xml" />`,
     head.publishedTime &&
       `<meta property="article:published_time" content="${head.publishedTime}" />`,
@@ -82,12 +82,20 @@ function withHead(template, head) {
   return html.replace('</head>', `    ${extra}\n  </head>`);
 }
 
-// The blog's stylesheet ships as a chunk of the lazily loaded blog client. Link
-// it from the head so a prerendered page is styled before any script runs.
+// The blog's stylesheets ship as chunks of lazily loaded modules: the blog
+// client, and each post with the explorables it imports. Link the ones a page
+// needs from its head so it is styled before any script runs.
 const manifest = JSON.parse(await readFile(resolve(dist, '.vite/manifest.json'), 'utf8'));
-const blogCss = manifest['src/blog/client.tsx']?.css ?? [];
+const cssFor = (key, seen = new Set()) => {
+  const chunk = manifest[key];
+  if (!chunk || seen.has(key)) return [];
+  seen.add(key);
+  return [...(chunk.css ?? []), ...(chunk.imports ?? []).flatMap((k) => cssFor(k, seen))];
+};
+const linkTags = (files) =>
+  [...new Set(files)].map((file) => `<link rel="stylesheet" href="/${file}" />`).join('\n    ');
+const blogCss = cssFor('src/blog/client.tsx');
 if (!blogCss.length) throw new Error('prerender: no CSS found for src/blog/client.tsx');
-const cssLinks = blogCss.map((file) => `<link rel="stylesheet" href="/${file}" />`).join('\n    ');
 
 const template = await readFile(resolve(dist, 'index.html'), 'utf8');
 if (!template.includes('<div id="root"></div>'))
@@ -96,7 +104,13 @@ if (!template.includes('<div id="root"></div>'))
 for (const path of server.prerenderPaths()) {
   const { html, head, status } = await server.render(path);
   if (status !== 200) throw new Error(`prerender: ${path} rendered ${status}`);
-  const page = withHead(template, head).replace(
+  const slug = /^\/blog\/(.+)$/.exec(path)?.[1];
+  const css = linkTags(
+    [...blogCss, ...(slug ? cssFor(`content/posts/${slug}.mdx`) : [])].filter(
+      (file) => !template.includes(`/${file}`)
+    )
+  );
+  const page = withHead(template, head, css).replace(
     '<div id="root"></div>',
     `<div id="root">${html}</div>`
   );

@@ -1,0 +1,304 @@
+/* Hallmark · shape: kept (component styles) · genre: modern-minimal · theme: brand · v2.0.0
+ * The explorables' own styles, imported by each component so they work on the blog and the home page alike. Tokens come from src/blog/tokens.css. */
+
+/* ----------------------------------------- explorable: what the server sees */
+
+.sv-frame {
+  container-type: inline-size;
+}
+
+.sv {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* Sized by its container, so it fits a hero column as well as a wide figure. */
+@container (min-width: 44rem) {
+  .sv {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  }
+
+  .sv-server {
+    border-left: var(--rule-hair) solid var(--color-rule);
+  }
+}
+
+.sv-pane {
+  display: grid;
+  align-self: start;
+  align-content: start;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+}
+
+.sv-server {
+  border-top: var(--rule-hair) solid var(--color-rule);
+}
+
+@container (min-width: 44rem) {
+  .sv-server {
+    border-top: 0;
+  }
+}
+
+.sv-label {
+  font-size: var(--text-sm);
+  font-weight: var(--display-weight);
+}
+
+.sv-input {
+  width: 100%;
+  min-height: 7.5rem;
+  resize: vertical;
+  padding: var(--space-sm);
+  border: var(--rule-hair) solid var(--color-muted);
+  border-radius: var(--radius-card);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-size: var(--text-md);
+  line-height: 1.5;
+}
+
+.sv-input:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -1px;
+}
+
+.sv-hint {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+}
+
+.sv-parts {
+  display: grid;
+  gap: var(--space-sm);
+  margin: 0;
+}
+
+.sv-parts > div {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  gap: var(--space-sm);
+  align-items: baseline;
+}
+
+.sv-parts dt {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+}
+
+.sv-parts dd {
+  margin: 0;
+  display: grid;
+  gap: var(--space-2xs);
+}
+
+.sv-parts code {
+  font-family: var(--font-outlier);
+  font-size: 0.78rem;
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+.sv-changed {
+  margin-left: calc(-1 * var(--space-sm));
+  padding-left: var(--space-xs);
+  border-left: 2px solid var(--color-accent);
+}
+
+.sv-decoded {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+}
+
+.sv-verdict {
+  display: grid;
+  gap: var(--space-sm);
+  justify-items: start;
+  margin-top: var(--space-xs);
+  padding-top: var(--space-md);
+  border-top: var(--rule-hair) solid var(--color-rule);
+}
+
+.sv-verdict p {
+  font-size: var(--text-sm);
+}
+
+.sv-refused {
+  color: var(--color-error);
+}
+
+.dark .sv-refused {
+  color: var(--color-ink);
+}
+
+.sv-button {
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 0 var(--space-md);
+  border: var(--rule-hair) solid var(--color-rule);
+  border-radius: var(--radius-card);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-micro) var(--ease-out),
+    border-color var(--dur-micro) var(--ease-out);
+}
+
+.sv-button:hover {
+  border-color: var(--color-muted);
+}
+
+.sv-button:active {
+  background: var(--color-paper-3);
+}
+
+.sv-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ------------------------------------------ explorables: key ladder, echo loop */
+
+.kl,
+.el {
+  display: grid;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+}
+
+.kl-controls {
+  display: grid;
+  gap: var(--space-md);
+  align-items: end;
+}
+
+@media (min-width: 48rem) {
+  .kl-controls {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr) auto;
+  }
+}
+
+.kl-field {
+  display: grid;
+  gap: var(--space-xs);
+}
+
+.kl-field label,
+.el-guards legend {
+  font-size: var(--text-sm);
+  font-weight: var(--display-weight);
+}
+
+.kl-input {
+  min-height: 44px;
+}
+
+.kl-range {
+  width: 100%;
+  min-height: 44px;
+  accent-color: var(--color-accent);
+}
+
+.kl-range:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.kl-ladder {
+  padding-top: var(--space-md);
+  border-top: var(--rule-hair) solid var(--color-rule);
+}
+
+.kl-ladder > div {
+  grid-template-columns: 10rem minmax(0, 1fr);
+}
+
+.kl-ladder dd {
+  font-size: var(--text-sm);
+}
+
+.el {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 48rem) {
+  .el {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  }
+}
+
+.el-guards {
+  display: grid;
+  align-content: start;
+  gap: var(--space-sm);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.el-guards label {
+  display: flex;
+  gap: var(--space-sm);
+  align-items: flex-start;
+  min-height: 44px;
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+.el-guards input {
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-top: var(--space-3xs);
+  flex-shrink: 0;
+  accent-color: var(--color-accent);
+}
+
+.el-guards input:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.el-guards .sv-button {
+  justify-self: start;
+}
+
+.el-log {
+  display: grid;
+  align-content: start;
+  gap: var(--space-sm);
+  min-height: 12rem;
+}
+
+.el-log ol {
+  margin: 0;
+  padding-left: var(--space-lg);
+  display: grid;
+  gap: var(--space-2xs);
+  font-size: var(--text-sm);
+  list-style: decimal;
+}
+
+.el-log li::marker {
+  color: var(--color-muted);
+}
+
+.el-quiet {
+  color: var(--color-accent);
+}
+
+/* In a hero: a shorter input, and the hint goes to the figure's caption. */
+.sv-compact .sv-input {
+  min-height: 4.5rem;
+}
+
+.sv-compact .sv-hint {
+  display: none;
+}
+
+.sv-compact .sv-pane {
+  gap: var(--space-xs);
+  padding: var(--space-md) var(--space-lg);
+}
