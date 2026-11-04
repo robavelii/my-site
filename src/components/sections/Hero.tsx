@@ -26,7 +26,7 @@ export const Hero: React.FC = () => {
               height={384}
               fetchPriority="high"
               decoding="async"
-              className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+              className="w-full h-full object-cover"
             />
           </div>
         </div>
