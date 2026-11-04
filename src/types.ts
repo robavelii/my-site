@@ -9,6 +9,8 @@ export type ProjectVisibility = 'public' | 'private';
 export interface ProjectLinks {
   repo?: string;
   demo?: string;
+  /** A post on this site's blog about the project. */
+  post?: string;
 }
 
 export interface Project {

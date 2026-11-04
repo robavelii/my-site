@@ -67,6 +67,7 @@ export const PROJECTS: Project[] = [
     links: {
       repo: 'https://github.com/robavelii/clipboard-worker',
       demo: 'https://clip.rfh.et',
+      post: '/blog/clipsync',
     },
     architecture: {
       flow: 'Copy, seal, relay, paste',

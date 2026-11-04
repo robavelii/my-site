@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ExternalLink, GitBranch, Lock } from 'lucide-react';
+import { ExternalLink, FileText, GitBranch, Lock } from 'lucide-react';
 import { Github } from '../ui/BrandIcons';
 import { PROJECTS } from '../../data/constants';
 import { ArchitectureDiagram } from '../ArchitectureDiagram';
@@ -176,7 +176,9 @@ export const Projects: React.FC = () => {
                                   </div>
                                 )}
 
-                                {(project.links?.repo || project.links?.demo) && (
+                                {(project.links?.repo ||
+                                  project.links?.demo ||
+                                  project.links?.post) && (
                                   <div className="flex flex-wrap gap-2 pt-1">
                                     {project.links.repo && (
                                       <a
@@ -198,6 +200,15 @@ export const Projects: React.FC = () => {
                                       >
                                         <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
                                         Live
+                                      </a>
+                                    )}
+                                    {project.links.post && (
+                                      <a
+                                        href={project.links.post}
+                                        className="inline-flex items-center gap-2 rounded border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-1.5 text-xs font-medium text-zinc-900 dark:text-zinc-100 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                                      >
+                                        <FileText className="w-3.5 h-3.5" aria-hidden="true" />
+                                        Write-up
                                       </a>
                                     )}
                                   </div>
