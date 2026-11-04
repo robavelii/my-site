@@ -1,25 +1,39 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowRight, Check, Copy, Download, Laptop, Mail, Moon, Search, Sun } from 'lucide-react';
+import {
+  ArrowRight,
+  Check,
+  Copy,
+  Download,
+  FileText,
+  Laptop,
+  Mail,
+  Moon,
+  Search,
+  Sun,
+} from 'lucide-react';
 import { Github, Linkedin } from './BrandIcons';
 import { CONTACT_EMAIL, SECTIONS, SOCIAL } from '../../data/constants';
 import { useTheme } from '../../context/ThemeContext';
+import { POSTS, postUrl } from '../../blog/posts';
+import type { HeaderPage } from '../layout/Header';
 
 interface Command {
   id: string;
   label: string;
   hint?: string;
-  group: 'Navigate' | 'Theme' | 'Actions';
+  group: 'Navigate' | 'Posts' | 'Theme' | 'Actions';
   icon: React.ElementType;
   run: () => void;
   keepOpen?: boolean;
 }
 
 interface CommandPaletteProps {
+  page: HeaderPage;
   onClose: () => void;
 }
 
 /** Mounted only while open, so every open starts from clean state. */
-export const CommandPalette: React.FC<CommandPaletteProps> = ({ onClose }) => {
+export const CommandPalette: React.FC<CommandPaletteProps> = ({ page, onClose }) => {
   const { theme, setTheme } = useTheme();
   const [query, setQuery] = useState('');
   const [active, setActive] = useState(0);
@@ -35,11 +49,36 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ onClose }) => {
       hint: `#${s.id}`,
       group: 'Navigate',
       icon: ArrowRight,
-      run: () => document.getElementById(s.id)?.scrollIntoView({ behavior: 'smooth' }),
+      run: () => {
+        if (page === 'home') document.getElementById(s.id)?.scrollIntoView({ behavior: 'smooth' });
+        else window.location.assign(`/#${s.id}`);
+      },
+    }));
+    nav.push({
+      id: 'nav-blog',
+      label: 'Blog',
+      hint: '/blog',
+      group: 'Navigate',
+      icon: ArrowRight,
+      run: () => {
+        window.location.assign('/blog');
+      },
+    });
+
+    const posts: Command[] = POSTS.map((post) => ({
+      id: `post-${post.slug}`,
+      label: post.title,
+      hint: `${post.readingMinutes} min`,
+      group: 'Posts',
+      icon: FileText,
+      run: () => {
+        window.location.assign(postUrl(post.slug));
+      },
     }));
 
     return [
       ...nav,
+      ...posts,
       {
         id: 'theme-light',
         label: 'Light theme',
@@ -117,7 +156,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({ onClose }) => {
         run: () => window.open(SOCIAL.linkedin, '_blank', 'noopener,noreferrer'),
       },
     ];
-  }, [theme, setTheme, copied]);
+  }, [page, theme, setTheme, copied]);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();

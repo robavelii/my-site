@@ -1,0 +1,37 @@
+---
+title: A clipboard my server can’t read
+summary: How ClipSync moves what you copy between your own devices while the server only ever holds ciphertext.
+date: 2026-11-04
+tags: [encryption, cloudflare, typescript]
+project: clipsync
+draft: true
+---
+
+On 23 September, ClipSync went from an empty repository to a working service in 49 commits: a protocol, the crypto, a Cloudflare Worker, the sync room, a desktop agent, a web app and a tray panel, live on clip.rfh.et by the end of the day.
+
+## What the server sees
+
+Every clip is sealed on the device that copied it. The server stores and relays an envelope it can read the outside of, but not the inside.
+
+```ts title="packages/crypto/src/index.ts"
+const [encKey, dedupeKey] = await Promise.all([
+  crypto.subtle.deriveKey(
+    hkdfParams(salt, 'clipsync:enc:v1'),
+    source,
+    { name: 'AES-GCM', length: 256 },
+    false,
+    ['encrypt', 'decrypt']
+  ),
+  crypto.subtle.deriveKey(
+    hkdfParams(salt, 'clipsync:dedupe:v1'),
+    source,
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  ),
+]);
+```
+
+## The key ladder
+
+Your passphrase never encrypts a clip directly.
